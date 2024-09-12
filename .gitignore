@@ -1,0 +1,76 @@
+# Python specific
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+*.pyc
+*.pyo
+*.pyd
+*.whl
+
+# Flask specific
+instance/
+.webassets-cache
+.env
+*.env
+
+# Environment and virtualenv
+env/
+venv/
+ENV/
+venv.bak/
+venv.bak/
+
+# MongoDB specific
+*.lock
+db/
+*.log
+dump/
+
+# Logs
+*.log
+*.out
+*.err
+
+# Local development
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# React / Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+coverage/
+build/
+
+# MacOS specific
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows specific
+Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+ehthumbs.db
+Thumbs.db
+*.lnk
+
+# IDE specific
+*.iml
+*.ipr
+*.iws
+
+# System files
+*.bak
+*.swp
+*.swo
+*~
