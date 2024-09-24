@@ -12,7 +12,6 @@ print("Starting scraper...")
 url = "https://www.vanderbilt.edu/catalogs/kuali/undergraduate-24-25.php#/courses"
 driver = webdriver.Chrome()
 driver.get(url)
-all_links = []
 print("Opened browser")
 # Getting dropdown buttons
 buttons = WebDriverWait(driver, 10).until(
@@ -26,8 +25,9 @@ for button in buttons:
 course_links = WebDriverWait(driver, 10).until(
     EC.presence_of_all_elements_located((By.CSS_SELECTOR, 'a[href^="#/courses/"]'))
 )
-print(len(course_links))
-all_links.extend(course_links)
+cs_course_links = [link for link in course_links if link.text.startswith("CS")]
+print("number of course links", len(course_links))
+print("number of cs course links", len(cs_course_links))
 
 for link in course_links:
         print(link)
