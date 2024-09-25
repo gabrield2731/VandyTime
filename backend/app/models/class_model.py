@@ -6,9 +6,6 @@ import os
 
 load_dotenv(find_dotenv())
 
-# mongo = current_app.extensions['pymongo']
-# classes_collection = mongo.db.classes
-
 # Get a class by ID from the MongoDB collection
 def get_class_by_id(class_id):
     client = MongoClient(os.getenv("MONGO_URI"))
