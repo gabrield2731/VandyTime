@@ -57,7 +57,7 @@ def delete_student(student_id):
         delete_object = student_collection.delete_one({"_id": ObjectId(student_id)})
         return {"deleted_count": delete_object.deleted_count}
     except Exception as e:
-        print(f"Error updating student: {e}")
+        print(f"Error deleting student: {e}")
         return None
     finally:
         client.close()

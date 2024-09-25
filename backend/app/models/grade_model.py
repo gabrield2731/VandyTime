@@ -57,7 +57,7 @@ def delete_grade(grade_id):
         delete_object = grade_collection.delete_one({"_id": ObjectId(grade_id)})
         return {"deleted_count": delete_object.deleted_count}
     except Exception as e:
-        print(f"Error updating grade: {e}")
+        print(f"Error deleting grade: {e}")
         return None
     finally:
         client.close()

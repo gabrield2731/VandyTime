@@ -57,7 +57,7 @@ def delete_class(class_id):
         delete_object = class_collection.delete_one({"_id": ObjectId(class_id)})
         return {"deleted_count": delete_object.deleted_count}
     except Exception as e:
-        print(f"Error updating class: {e}")
+        print(f"Error deleting class: {e}")
         return None
     finally:
         client.close()
