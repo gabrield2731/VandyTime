@@ -69,12 +69,16 @@ jobs:
         run: |
           cat response.txt > documentation.md
 
-      - name: Commit and push changes
+      - name: Commit and push changes if documentation was updated
         run: |
           git config --global user.name 'github-actions'
           git config --global user.email 'github-actions@github.com'
-          git add documentation.md
-          git commit -m "Update documentation with API data"
-          git push
+          if git diff --quiet documentation.md; then
+            echo "No changes in documentation.md, skipping commit."
+          else
+            git add documentation.md
+            git commit -m "Update documentation with API data"
+            git push
+          fi
         env:
           GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }}
