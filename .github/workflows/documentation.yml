@@ -39,16 +39,8 @@ jobs:
             files_changed='[]'
           fi
           echo "Files changed: $files_changed"  # Debugging step
-
-      - name: Call the API
-        id: call_api
-        run: |
-          if [ -f changedFiles.txt]; then
-            files_changed=$(cat changedFiles.txt)
-          else
-            files_changed='[]'
-          fi
           files_changed=$(echo $files_changed | jq .)
+          echo "Files changed v2: $files_changed"
           json_payload=$(jq -n           --arg repo_owner "${{ github.repository_owner }}"           --arg repo "${{ github.event.repository.name }}"           --argjson files_changed "$files_changed"           '{repo_owner: $repo_owner, repo: $repo, files_changed: $files_changed}')
           echo "JSON Payload: $json_payload"  # Debugging step
           response=$(curl -s https://docubot-two.vercel.app/document -H "Content-Type: application/json" -d "$json_payload")
