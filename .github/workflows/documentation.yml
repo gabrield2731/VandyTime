@@ -3,7 +3,7 @@ name: Update Documentation with API Data
 on:
   push:
     branches:
-      - main
+      - '**'  # This will trigger the workflow on push to any branch
 
 jobs:
   call-api-and-update-documentation:
@@ -39,9 +39,17 @@ jobs:
             files_changed='[]'
           fi
           echo "Files changed: $files_changed"  # Debugging step
+
+      - name: Call the API
+        id: call_api
+        run: |
+          if [ -f changedFiles.txt ]; then
+            files_changed=$(cat changedFiles.txt)
+          else
+            files_changed='[]'
+          fi
           files_changed=$(echo $files_changed | jq .)
-          echo "Files changed v2: $files_changed"
-          json_payload=$(jq -n           --arg repo_owner "${{ github.repository_owner }}"           --arg repo "${{ github.event.repository.name }}"           --argjson files_changed "$files_changed"           '{repo_owner: $repo_owner, repo: $repo, files_changed: $files_changed}')
+          json_payload=$(jq -n --arg repo_owner "${{ github.repository_owner }}" --arg repo "${{ github.event.repository.name }}" --argjson files_changed "$files_changed" '{repo_owner: $repo_owner, repo: $repo, files_changed: $files_changed}')
           echo "JSON Payload: $json_payload"  # Debugging step
           response=$(curl -s https://docubot-two.vercel.app/document -H "Content-Type: application/json" -d "$json_payload")
           if [ $? -ne 0 ]; then
@@ -70,7 +78,9 @@ jobs:
           else
             git add documentation.md
             git commit -m "Update documentation with API data"
-            git push
+            # Extract branch name from 'github.ref' (e.g., 'refs/heads/branch-name' -> 'branch-name')
+            branch_name=$(echo "${{ github.ref }}" | sed 's/refs\/heads\///')
+            git push origin "$branch_name"
           fi
         env:
           GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }}
