@@ -1,8 +1,19 @@
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import SignIn from "./pages/SignIn";
+import Home from "./pages/Home";
+import { AuthProvider } from "./stores/firebase"; // AuthProvider to wrap the app
+
 function App() {
   return (
-    <div className="App">
-      <p>herro</p>
-    </div>
+    <AuthProvider>
+      <Router>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<SignIn />} />
+        </Routes>
+      </Router>
+    </AuthProvider>
   );
 }
 
