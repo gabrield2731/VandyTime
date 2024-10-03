@@ -25,6 +25,8 @@ ENV/
 venv.bak/
 venv.bak/
 
+*.json
+
 # MongoDB specific
 *.lock
 db/
