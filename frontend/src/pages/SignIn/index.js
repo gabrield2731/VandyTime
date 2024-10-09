@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../firebase/index";
+import "./index.css";
 
 const SignIn = () => {
   const navigate = useNavigate();
@@ -28,38 +29,39 @@ const SignIn = () => {
   };
 
   return (
-    <div style={{ textAlign: "center", marginTop: "50px" }}>
-      <h2>Sign In with Email and Password</h2>
-      {error && <p style={{ color: "red" }}>{error}</p>}
-      <form
-        onSubmit={handleSignIn}
-        style={{ display: "inline-block", textAlign: "left" }}>
-        <div>
-          <label>Email: </label>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-            style={{ padding: "5px", marginBottom: "10px", width: "100%" }}
-          />
+    <div className="signin-container">
+      <div className="signin-box">
+        <h2>VandyTime Login</h2>
+        {error && <p className="error-message">{error}</p>}
+        <form onSubmit={handleSignIn} className="signin-form">
+          <div className="input-group">
+            <label>Email</label>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
+          <div className="input-group">
+            <label>Password</label>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
+          <button type="submit" className="signin-button">
+            Login
+          </button>
+        </form>
+
+        <div className="signup">
+          <p>Don't have an account?</p>
+          <a href="/signup">Sign up</a>
         </div>
-        <div>
-          <label>Password: </label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            style={{ padding: "5px", marginBottom: "10px", width: "100%" }}
-          />
-        </div>
-        <button
-          type="submit"
-          style={{ padding: "10px 20px", fontSize: "16px" }}>
-          Sign In
-        </button>
-      </form>
+      </div>
     </div>
   );
 };
