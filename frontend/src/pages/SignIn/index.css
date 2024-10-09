@@ -1,0 +1,101 @@
+body {
+  font-family: "Poppins", sans-serif;
+  background-color: #f5f5f5;
+  margin: 0;
+  padding: 0;
+}
+
+.signin-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f5f5f5;
+}
+
+.signin-box {
+  width: 350px;
+  padding: 40px;
+  background-color: white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  text-align: center;
+}
+
+.signin-box h2 {
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: #000000; /* VandyTime color (dark blue) */
+}
+
+.error-message {
+  color: red;
+  margin-bottom: 10px;
+}
+
+.signin-form .input-group {
+  margin-bottom: 15px;
+  text-align: left;
+}
+
+.signin-form label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.signin-form input {
+  width: 100%;
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.signin-button {
+  width: 100%;
+  padding: 10px;
+  background-color: #d4af37 !important; /* Ensure this style is applied */
+  color: white !important;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.signin-button:hover {
+  background-color: #b9972c;
+  box-shadow: 0 4px 15px rgba(128, 128, 128, 0.4); /* Light grey shadow */
+}
+
+.signin-button:focus {
+  outline: none;
+  box-shadow: 0 0 3px 2px rgba(212, 175, 55, 0.5);
+}
+
+.signup {
+  margin-top: 20px; /* Add some space between the sign-up section and other elements */
+  text-align: center; /* Center the text */
+  font-size: 14px; /* Adjust font size to make it slightly smaller */
+  color: #555; /* Grey color for the text */
+}
+
+.signup p {
+  margin-bottom: 10px; /* Add some space between the text and the link */
+  font-family: "Poppins", sans-serif; /* Use Poppins font */
+  color: #333; /* Darker grey for the paragraph */
+}
+
+.signup a {
+  color: #d4af37; /* Light gold color for the link */
+  text-decoration: none; /* Remove underline */
+  font-weight: 500; /* Slightly bolder text */
+  transition: color 0.3s ease; /* Add transition effect */
+}
+
+.signup a:hover {
+  color: #b9972c; /* Darker gold on hover */
+  text-decoration: underline; /* Add underline on hover */
+}
