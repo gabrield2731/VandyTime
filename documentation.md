@@ -1,1 +1,1 @@
-null
+Failed to generate documentation
