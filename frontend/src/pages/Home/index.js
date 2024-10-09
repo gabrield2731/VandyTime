@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useAuth } from "../../stores/firebase"; // Make sure this path is correct
 
 const Home = () => {
