@@ -4,7 +4,7 @@ import './index.css';
 
 const Navbar = () => {
   const location = useLocation();
-  const navBarRoutes = ['/login'];
+  const navBarRoutes = ['/login', '/signup'];
 
   return (
     <>

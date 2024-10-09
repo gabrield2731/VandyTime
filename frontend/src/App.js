@@ -9,7 +9,6 @@ import Grades from "./pages/Grades";
 import Navbar from "./pages/NavBar";
 import Courses from "./pages/Courses";
 import Input from "./pages/Input";
-import { AuthProvider } from "./stores/firebase"; // AuthProvider to wrap the app
 
 function App() {
   return (
