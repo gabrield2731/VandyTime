@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from ..models.class_model import get_class_by_id, create_class, update_class, delete_class
+from ..controllers.class_controller import get_class_by_id, create_class, update_class, delete_class
 
 class_bp = Blueprint('class_bp', __name__)
 
