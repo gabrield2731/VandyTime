@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from ..models.grade_model import get_grade_by_id, create_grade, update_grade, delete_grade
+from ..controllers.grade_controller import get_grade_by_id, create_grade, update_grade, delete_grade
 
 grade_bp = Blueprint('grade_bp', __name__)
 
