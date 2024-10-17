@@ -1,66 +1,39 @@
 name: API Tests
 
 on:
-  push:  # Trigger on push to any branch
-    branches: ['*']
+  push:
+    branches:
+      - '**'  # Triggers on all branches
 
-  pull_request:  # Trigger on PRs targeting the 'main' branch
-    branches: [main]
+  pull_request:
+    branches:
+      - main  # Also runs on PRs targeting the 'main' branch
 
 jobs:
   api-tests:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout the specific branch that triggered the workflow
         uses: actions/checkout@v3
+        with:
+          ref: ${{ github.ref }}  # Ensure the correct branch is checked out
 
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.8'  # Adjust as needed
-
-      - name: Cache dependencies
-        uses: actions/cache@v3
-        with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
+          python-version: '3.8'  # Adjust if needed
 
       - name: Install dependencies
         run: |
           cd backend
           python -m venv venv
-          source venv/bin/activate  # Activate virtual environment
+          source venv/bin/activate
           pip install --upgrade pip
-          pip install pytest pytest-cov  # Install pytest and coverage tools
+          pip install pytest pytest-cov
           pip install -r requirements.txt
 
-      - name: Run Tests and Generate Reports
+      - name: Run API Tests
         run: |
           cd backend
-          pytest --cov=app/controllers --cov-report=html --junitxml=pytest-report.xml
-
-      - name: Upload Test and Coverage Reports
-        uses: actions/upload-artifact@v3
-        with:
-          name: test-results
-          path: |
-            backend/pytest-report.xml
-            backend/htmlcov/  # Upload HTML coverage report
-
-      - name: Publish Test Results to GitHub Summary
-        if: always()
-        uses: actions/upload-artifact@v3
-        with:
-          name: junit-test-results
-          path: backend/pytest-report.xml
-
-      - name: Display Test Results Summary
-        if: success()
-        run: |
-          echo "### Test Results Summary" >> $GITHUB_STEP_SUMMARY
-          echo "<details><summary>View Detailed Coverage Report</summary>" >> $GITHUB_STEP_SUMMARY
-          echo "[Download Coverage Report](../artifacts/test-results/htmlcov/index.html)" >> $GITHUB_STEP_SUMMARY
-          echo "</details>" >> $GITHUB_STEP_SUMMARY
+          pytest --cov=app/controllers --cov-report=term-missing
