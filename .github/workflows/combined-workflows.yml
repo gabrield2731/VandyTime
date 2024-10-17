@@ -104,7 +104,7 @@ jobs:
         run: |
           cat response.txt > documentation.md
 
-      - name: Commit and push changes if documentation was updated
+      - name: Commit and Push Documentation Changes
         run: |
           git config --global user.name 'github-actions'
           git config --global user.email 'github-actions@github.com'
