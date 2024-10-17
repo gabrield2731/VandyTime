@@ -1,28 +1,34 @@
-# API Endpoints
+## /student
 
-## /document
-
-**Endpoint:** https://docubot-two.vercel.app/document
+**Endpoint:** `${process.env.REACT_APP_API_URL}/student`
 
 **Method:** POST
 
-**Description:** This endpoint is used to generate documentation for changed files in a GitHub repository.
+**Description:** This endpoint is used to create a new student user in the database.
 
 **Request Payload:**
-- `repo_owner` (string): The owner of the GitHub repository.
-- `repo` (string): The name of the GitHub repository.
-- `files_changed` (array): A list of filenames that have changed in the repository.
+- `email` (string): The email address of the student.
+- `firebase_id` (string): The Firebase ID of the student.
 
 **Response:**
-- `updated_doc` (string): The updated documentation content.
+- `data` (JSON): The response data containing information about the created student.
 
-**Example Curl Request:**
-```bash
-curl -X POST https://docubot-two.vercel.app/document \
- -H "Content-Type: application/json" \
- -d '{
- "repo_owner": "your_repo_owner",
- "repo": "your_repo_name",
- "files_changed": ["file1.txt", "file2.md"]
- }'
+**Example Request:**
+```javascript
+const email = "student@vanderbilt.edu";
+const f_id = "firebase_id_123";
+
+fetch(`${process.env.REACT_APP_API_URL}/student`, {
+ method: "POST",
+ headers: {
+ "Content-Type": "application/json",
+ },
+ body: JSON.stringify({
+ email,
+ firebase_id: f_id,
+ }),
+})
+ .then(response => response.json())
+ .then(data => console.log(data))
+ .catch(error => console.error(error));
 ```
