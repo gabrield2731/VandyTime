@@ -1,13 +1,14 @@
-/* index.css */
-
-/* Reuse the same body and container styles from Sign In */
-
 .signup-container {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
   background-color: #f5f5f5;
+  background-image: url("../../assets/vanderbilt_campus.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
 }
 
 .signup-box {
