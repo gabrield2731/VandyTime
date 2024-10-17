@@ -1,43 +1,29 @@
-## API Endpoints for Class Management
+## /api-tests
 
-### 1. Get Class by ID
-- **Endpoint URL:** `/<class_id>`
-- **Method:** `GET`
-- **Description:** Fetch details of a specific class by providing its unique ID.
-- **Parameters:**
- - `class_id` (string): The unique identifier of the class to retrieve.
-- **Response:**
- - **Success:** Returns a JSON object containing class information with a 200 status code.
- - **Error:** If the class is not found, returns a JSON error message with a 404 status code.
+**Endpoint:** https://api.example.com/api-tests
 
-### 2. Create a New Class
-- **Endpoint URL:** `/`
-- **Method:** `POST`
-- **Description:** Create a new class with the provided data.
-- **Request Body:**
- - `class_data` (JSON): A JSON object containing class details.
-- **Response:**
- - **Success:** Returns a JSON message confirming class creation and its ID with a 201 status code.
- - **Error:** None specified.
+**Method:** POST
 
-### 3. Update Class Details
-- **Endpoint URL:** `/<class_id>`
-- **Method:** `PUT`
-- **Description:** Update the details of an existing class.
-- **Parameters:**
- - `class_id` (string): The unique identifier of the class to update.
-- **Request Body:**
- - `update_data` (JSON): A JSON object containing updated class details.
-- **Response:**
- - **Success:** Returns a JSON message confirming the update with a 200 status code if changes are made.
- - **Error:** Returns a JSON error message with a 400 status code if no changes are made.
+**Description:** Triggers API tests for a GitHub repository on push or pull request events.
 
-### 4. Delete a Class
-- **Endpoint URL:** `/<class_id>`
-- **Method:** `DELETE`
-- **Description:** Delete a class by its ID.
-- **Parameters:**
- - `class_id` (string): The unique identifier of the class to delete.
-- **Response:**
- - **Success:** Returns a JSON message confirming deletion with a 200 status code if the class is deleted.
- - **Error:** Returns a JSON error message with a 404 status code if the class is not found.
+**Request Payload:**
+- `github_token` (string): A GitHub personal access token with repository access.
+- `repository` (string): The full name of the GitHub repository (e.g., "owner/repo_name").
+- `branch` (string): The branch to run tests against (optional, defaults to the main branch).
+
+**Response:**
+- `test_results` (object): An object containing test results and coverage data.
+ - `success` (boolean): Indicates if all tests passed.
+ - `coverage` (float): The code coverage percentage.
+ - `report_url` (string): URL to the detailed test and coverage report.
+
+**Example Curl Request:**
+```bash
+curl -X POST https://api.example.com/api-tests \
+ -H "Authorization: Bearer YOUR_GITHUB_TOKEN" \
+ -H "Content-Type: application/json" \
+ -d '{
+ "repository": "your_repo_owner/your_repo_name",
+ "branch": "main"
+ }'
+```
