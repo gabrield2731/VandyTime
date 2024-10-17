@@ -26,12 +26,19 @@ def create_app():
         print(f"Failed to connect to MongoDB: {e}")
 
 
-    CORS(app)
+    CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}}, supports_credentials=True)
 
     # Import and register blueprints
 
     app.register_blueprint(student_bp, url_prefix='/student')
     app.register_blueprint(class_bp, url_prefix='/class')
     app.register_blueprint(grade_bp, url_prefix='/grade')
+
+    @app.after_request
+    def after_request(response):
+        response.headers.add("Access-Control-Allow-Origin", "http://localhost:3000")
+        response.headers.add("Access-Control-Allow-Headers", "Content-Type,Authorization")
+        response.headers.add("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS")
+        return response
 
     return app
