@@ -104,17 +104,20 @@ jobs:
         run: |
           cat response.txt > documentation.md
 
-      - name: Commit and Push Documentation Changes
+      - name: Commit and Push Changes if Documentation Was Updated
         run: |
           git config --global user.name 'github-actions'
           git config --global user.email 'github-actions@github.com'
-          if git diff --quiet documentation.md; then
-            echo "No changes in documentation.md, skipping commit."
-          else
+          
+          if ! git diff --quiet documentation.md; then
+            echo "Documentation updated, committing changes..."
             git add documentation.md
             git commit -m "Update documentation with API data"
             # Extract branch name from 'github.ref' (e.g., 'refs/heads/branch-name' -> 'branch-name')
             branch_name=$(echo "${{ github.ref }}" | sed 's/refs\/heads\///')
             git push origin "$branch_name"
+          else
+            echo "No changes in documentation.md, skipping commit."
+          fi
         env:
           GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }}
