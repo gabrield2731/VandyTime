@@ -13,7 +13,7 @@ def get_class(class_id):
 
 @class_bp.route('/', methods=['POST'])
 def add_class():
-    """Route to create a new class."""
+    """Route to create a new class"""
     class_data = request.json
     result = create_class(class_data)
     # Broken need to implement in create_class function
