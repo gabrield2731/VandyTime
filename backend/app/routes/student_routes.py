@@ -17,7 +17,7 @@ def add_student():
     """Route to create a new student."""
     student_data = request.json
     result = create_student(student_data)
-    # Broken need to implement in create_class function
+    # Broken need to implement in create_class functions
     return jsonify({"message": "Student created", "id": str(result.inserted_id)}), 201
 
 @student_bp.route('/<student_id>', methods=['PUT'])

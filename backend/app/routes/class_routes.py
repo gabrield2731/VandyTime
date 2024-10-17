@@ -16,7 +16,7 @@ def add_class():
     """Route to create a new class"""
     class_data = request.json
     result = create_class(class_data)
-    # Broken need to implement in create_class function
+    # Broken need to implement in create_class functions
     return jsonify({"message": "Class created", "id": str(result.inserted_id)}), 201
 
 @class_bp.route('/<class_id>', methods=['PUT'])
