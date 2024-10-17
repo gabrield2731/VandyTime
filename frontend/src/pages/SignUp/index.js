@@ -14,7 +14,6 @@ const SignUp = () => {
   const [message, setMessage] = useState("");
 
   const createUser = async (f_id) => {
-    console.log(`${process.env.REACT_APP_API_URL}/student`);
     const call = await fetch(`${process.env.REACT_APP_API_URL}/student`, {
       method: "POST",
       headers: {
