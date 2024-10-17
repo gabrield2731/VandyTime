@@ -5,7 +5,7 @@ class_bp = Blueprint('class_bp', __name__)
 
 @class_bp.route('/<class_id>', methods=['GET'])
 def get_class(class_id):
-    """Route to fetch a class by ID."""
+    """Route to fetch a class by ID"""
     class_info = get_class_by_id(class_id)
     if class_info:
         return jsonify(class_info), 200

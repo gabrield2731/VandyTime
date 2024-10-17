@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify
 from ..models.student_model import get_student_by_id, create_student, update_student, delete_student
 
-# Create a blueprint for student-related routes
+# Create a blueprint for student-related route
 student_bp = Blueprint('student_bp', __name__)
 
 @student_bp.route('/<student_id>', methods=['GET'])

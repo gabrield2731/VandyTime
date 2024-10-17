@@ -5,7 +5,7 @@ grade_bp = Blueprint('grade_bp', __name__)
 
 @grade_bp.route('/<grade_id>', methods=['GET'])
 def get_grade(grade_id):
-    """Route to fetch a grade by ID."""
+    """Route to fetch a grade by ID"""
     grade = get_grade_by_id(grade_id)
     if grade:
         return jsonify(grade), 200
