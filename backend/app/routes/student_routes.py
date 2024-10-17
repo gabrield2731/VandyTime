@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify
 from ..controllers.student_controller import get_student_by_id, create_student, update_student, delete_student
 
-# Create a blueprint for student-related routes
+# Create a blueprint for student-related route
 student_bp = Blueprint('student_bp', __name__)
 
 @student_bp.route('/<student_id>', methods=['GET'])
@@ -17,7 +17,7 @@ def add_student():
     """Route to create a new student."""
     student_data = request.json
     result = create_student(student_data)
-    # Broken need to implement in create_class function
+    # Broken need to implement in create_class functions
     return jsonify({"message": "Student created", "id": str(result.inserted_id)}), 201
 
 @student_bp.route('/<student_id>', methods=['PUT'])
