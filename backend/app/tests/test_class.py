@@ -64,7 +64,7 @@ def test_create_class(test_db):
     test_db.delete_one({"_id": ObjectId(class1_id)})
     test_db.delete_one({"_id": ObjectId(class2_id)})
 
-# Test the update_class function
+# Test the update_class function 
 def test_update_class(test_db):
     # Insert a test class
     class_data = create_test_class_data(name="Class E", semester="Spring 2024", teacher="Teacher E", grades=[])
