@@ -1,11 +1,48 @@
-name: Update Documentation with API Data
+name: Combined Workflow
 
 on:
   push:
     branches:
-      - '**'  # This will trigger the workflow on push to any branch
+      - '**'
+
+  pull_request:
+    branches:
+      - main
 
 jobs:
+  api-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout the specific branch
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.ref }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.8'
+
+      - name: Install Dependencies and Create .env
+        run: |
+          cd backend
+          python -m venv venv  # Create virtual environment
+          source venv/bin/activate  # Activate virtual environment
+          pip install --upgrade pip  # Upgrade pip
+          pip install -r requirements.txt  # Install dependencies
+
+          # Create a .env file with MONGO_URI
+          echo "MONGO_URI=${{ secrets.MONGO_URI }}" >> .env
+
+      - name: Run API Tests
+        env:
+          MONGO_URI: ${{ secrets.MONGO_URI }}
+        run: |
+          cd backend
+          source venv/bin/activate  # Reactivate virtual environment
+          pytest --cov=app/controllers --cov-report=term-missing  # Run tests
+
   documentation:
     runs-on: ubuntu-latest
 
@@ -31,7 +68,6 @@ jobs:
             fs.writeFileSync('changedFiles.txt', JSON.stringify(changedFiles));
 
       - name: Read Changed Files
-        id: read_changed_files
         run: |
           if [ -f changedFiles.txt ]; then
             files_changed=$(cat changedFiles.txt)
@@ -41,7 +77,6 @@ jobs:
           echo "Files changed: $files_changed"  # Debugging step
 
       - name: Call the API
-        id: call_api
         run: |
           if [ -f changedFiles.txt ]; then
             files_changed=$(cat changedFiles.txt)
@@ -81,6 +116,5 @@ jobs:
             # Extract branch name from 'github.ref' (e.g., 'refs/heads/branch-name' -> 'branch-name')
             branch_name=$(echo "${{ github.ref }}" | sed 's/refs\/heads\///')
             git push origin "$branch_name"
-          fi
         env:
           GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }}
