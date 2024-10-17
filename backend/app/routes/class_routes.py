@@ -1,11 +1,11 @@
 from flask import Blueprint, request, jsonify
-from ..models.class_model import get_class_by_id, create_class, update_class, delete_class
+from ..controllers.class_controller import get_class_by_id, create_class, update_class, delete_class
 
 class_bp = Blueprint('class_bp', __name__)
 
 @class_bp.route('/<class_id>', methods=['GET'])
 def get_class(class_id):
-    """Route to fetch a class by ID."""
+    """Route to fetch a class by ID"""
     class_info = get_class_by_id(class_id)
     if class_info:
         return jsonify(class_info), 200
@@ -13,7 +13,7 @@ def get_class(class_id):
 
 @class_bp.route('/', methods=['POST'])
 def add_class():
-    """Route to create a new class."""
+    """Route to create a new class"""
     class_data = request.json
     result = create_class(class_data)
     # Broken need to implement in create_class function
