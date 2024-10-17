@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from ..models.student_model import get_student_by_id, create_student, update_student, delete_student
+from ..controllers.student_controller import get_student_by_id, create_student, update_student, delete_student
 
 # Create a blueprint for student-related routes
 student_bp = Blueprint('student_bp', __name__)
