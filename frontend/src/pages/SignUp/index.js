@@ -13,6 +13,23 @@ const SignUp = () => {
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
 
+  const createUser = async (f_id) => {
+    console.log(`${process.env.REACT_APP_API_URL}/student`);
+    const call = await fetch(`${process.env.REACT_APP_API_URL}/student`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email: email,
+        firebase_id: f_id,
+      }),
+    });
+
+    const data = await call.json();
+    console.log(data);
+  };
+
   const handleSignUp = async (e) => {
     setError("");
     setMessage("");
@@ -36,6 +53,9 @@ const SignUp = () => {
         password
       );
       const user = userCredential.user;
+
+      // Create user in the database
+      await createUser(user.uid);
 
       // Send email verification
       await sendEmailVerification(user);
