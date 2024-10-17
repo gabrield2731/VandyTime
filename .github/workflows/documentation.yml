@@ -6,7 +6,7 @@ on:
       - '**'  # This will trigger the workflow on push to any branch
 
 jobs:
-  call-api-and-update-documentation:
+  documentation:
     runs-on: ubuntu-latest
 
     steps:
