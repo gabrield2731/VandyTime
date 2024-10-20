@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import BarChartComponent from "../../components/BarChart";
 import "./styles.css";
 
-const BACKEND = process.env.BACKEND_URL;
+const BACKEND = process.env.REACT_APP_BACKEND_URL;
 
 const dummyGradeData = [
   { grade: "A+", percentage: 0 },
@@ -73,9 +73,11 @@ const Grades = () => {
   useEffect(() => {
     // initially get courses and set dummy grade data
     setGradeData(dummyGradeData);
-    fetch(`${BACKEND}/courses`)
+    console.log(BACKEND);
+    fetch(`${BACKEND}/class`)
       .then((response) => response.json())
       .then((data) => {
+        console.log(data);
         setCourses(data.courses);
       })
       .catch((error) => {
