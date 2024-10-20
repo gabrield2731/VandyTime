@@ -68,3 +68,48 @@ def delete_class(class_id):
         return None
     finally:
         client.close()
+
+# Get all classes from the MongoDB collection
+def get_all_classes():
+    client = MongoClient(os.getenv("MONGO_URI"))
+    db = client["vandytime_db"]
+    class_collection = db["classes"]
+    try:
+        class_list = list(class_collection.find())
+        return class_list
+    except Exception as e:
+        print(f"Error getting all classes: {e}")
+        return None
+    finally:
+        client.close()
+
+# Get all teachers for a class
+def get_teachers_for_class(class_name):
+    client = MongoClient(os.getenv("MONGO_URI"))
+    db = client["vandytime_db"]
+    class_collection = db["classes"]
+    try:
+        classes = class_collection.find({"name": class_name})
+        teacher_list = []
+        for class_data in classes:
+            teacher_list.append(class_data["teacher"])
+        return teacher_list
+    except Exception as e:
+        print(f"Error getting teachers for class: {e}")
+        return None
+    finally:
+        client.close()
+
+# Get class from teacher and name
+def get_class_by_teacher_and_name(teacher, name):
+    client = MongoClient(os.getenv("MONGO_URI"))
+    db = client["vandytime_db"]
+    class_collection = db["classes"]
+    try:
+        class_object = class_collection.find_one({"teacher": teacher, "name": name})
+        return class_object
+    except Exception as e:
+        print(f"Error getting class by teacher and name: {e}")
+        return None
+    finally:
+        client.close()

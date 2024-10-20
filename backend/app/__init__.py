@@ -19,7 +19,7 @@ def create_app():
     except Exception as e:
         print(f"Failed to connect to MongoDB: {e}")
 
-    # Allow CORS for all origins
+    # Automatically handle CORS
     CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
 
     @app.route('/')
@@ -31,23 +31,22 @@ def create_app():
     app.register_blueprint(class_bp, url_prefix='/class')
     app.register_blueprint(grade_bp, url_prefix='/grade')
 
-    # Handle preflight requests
     @app.before_request
     def handle_options_request():
         if request.method == "OPTIONS":
             response = app.make_default_options_response()
-            response.headers.add("Access-Control-Allow-Origin", "*")
-            response.headers.add("Access-Control-Allow-Headers", "Content-Type,Authorization")
-            response.headers.add("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS")
-            response.headers.add("Access-Control-Allow-Credentials", "true")
+            response.headers["Access-Control-Allow-Origin"] = "https://vandy-time-frontend.vercel.app"
+            response.headers["Access-Control-Allow-Headers"] = "Content-Type,Authorization"
+            response.headers["Access-Control-Allow-Methods"] = "GET,POST,PUT,DELETE,OPTIONS"
+            response.headers["Access-Control-Allow-Credentials"] = "true"
             return response
 
     @app.after_request
     def after_request(response):
-        response.headers.add("Access-Control-Allow-Origin", "*")
-        response.headers.add("Access-Control-Allow-Headers", "Content-Type,Authorization")
-        response.headers.add("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS")
-        response.headers.add("Access-Control-Allow-Credentials", "true")
+        response.headers["Access-Control-Allow-Origin"] = "https://vandy-time-frontend.vercel.app"
+        response.headers["Access-Control-Allow-Headers"] = "Content-Type,Authorization"
+        response.headers["Access-Control-Allow-Methods"] = "GET,POST,PUT,DELETE,OPTIONS"
+        response.headers["Access-Control-Allow-Credentials"] = "true"
         return response
 
     return app
