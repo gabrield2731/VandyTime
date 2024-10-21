@@ -5,17 +5,17 @@ import "./styles.css";
 const BACKEND = process.env.REACT_APP_BACKEND_URL;
 
 const dummyGradeData = [
-  { grade: "A+", percentage: 0 },
-  { grade: "A", percentage: 0 },
-  { grade: "A-", percentage: 0 },
-  { grade: "B+", percentage: 0 },
-  { grade: "B", percentage: 0 },
-  { grade: "B-", percentage: 0 },
+  { grade: "A+", percentage: 2 },
+  { grade: "A", percentage: 5 },
+  { grade: "A-", percentage: 8 },
+  { grade: "B+", percentage: 7 },
+  { grade: "B", percentage: 6 },
+  { grade: "B-", percentage: 4 },
   { grade: "C+", percentage: 0 },
-  { grade: "C", percentage: 0 },
-  { grade: "C-", percentage: 0 },
+  { grade: "C", percentage: 2 },
+  { grade: "C-", percentage: 1 },
   { grade: "D", percentage: 0 },
-  { grade: "F", percentage: 0 },
+  { grade: "F", percentage: 1 },
   { grade: "P", percentage: 0 },
   { grade: "NP", percentage: 0 },
 ];
@@ -54,10 +54,11 @@ const Grades = () => {
   };
 
   const handleChooseClass = () => {
-    // fetch classes info when selected
+    // TODO: fetch classes info when selected
     if (selectedCourse === "" || selectedInstructor === "Choose a class") {
       return;
     }
+    // this fetch is not tested, need to fit the returned value to the format of the variable
     fetch(
       `${BACKEND}/grades?course=${selectedCourse}&instructor=${selectedInstructor}`
     )
@@ -71,6 +72,7 @@ const Grades = () => {
   };
 
   useEffect(() => {
+    // TODO: get initial data
     // initially get courses and set dummy grade data
     setGradeData(dummyGradeData);
     console.log(BACKEND);
@@ -86,7 +88,8 @@ const Grades = () => {
   }, []);
 
   useEffect(() => {
-    // Fetch teachers based on selected course
+    //TODO: Fetch teachers based on selected course
+    // fix this fetch and make it match the format of the variables
     fetch(`${BACKEND}/teachers`)
       .then((response) => response.json())
       .then((data) => {

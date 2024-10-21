@@ -58,27 +58,29 @@
     padding: 0;
     text-align: left;
     margin-top: 15px;
+    
+    /* Center the entire list */
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Horizontally centers the list */
   }
   
-  /* Add some icons to the list items */
   .features-list li {
-    font-size: 1rem;
-    color: #666;
-    margin-bottom: 10px;
     display: flex;
-    align-items: center;
+    align-items: center; /* Vertically centers the check mark with the text */
+    font-size: 1.1em;
   }
   
   .features-list li::before {
-    content: '✔'; /* Checkmark for each feature */
-    color: #c4a55e;
-    font-size: 1.2rem;
-    margin-right: 10px;
+    content: "✔"; /* Use your check mark here, or keep your existing check mark icon */
+    color: #c5a15d; /* Set the color for the check mark */
+    margin-right: 10px; /* Space between the check mark and the text */
+    font-size: 1.5em; /* Adjust check mark size */
   }
   
   /* Button container */
   .button-section {
-    margin-top: 40px;
+    margin-bottom: 20px;
   }
   
   /* Styling the "Get Started" button */
