@@ -1,6 +1,7 @@
 from pymongo import MongoClient
 from bson.objectid import ObjectId
 from dotenv import load_dotenv, find_dotenv
+from urllib.parse import unquote
 import os
 
 load_dotenv(find_dotenv())
@@ -113,10 +114,11 @@ def get_teachers_for_class(class_name):
     try:
         classes = get_all_classes()
         teacher_list = []
-        print(class_name.lower())
+        decoded_class_name = unquote(class_name)
+        print(decoded_class_name.lower())
         for class_data in classes:
             print(class_data["name"].lower())
-            if class_data["name"].lower() == class_name.lower():
+            if class_data["name"].lower() == decoded_class_name.lower():
                 teacher_list.append(class_data["teacher"])
         return teacher_list
     except Exception as e:
