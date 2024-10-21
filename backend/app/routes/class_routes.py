@@ -1,14 +1,23 @@
 from flask import Blueprint, request, jsonify
 from ..controllers.class_controller import get_class_by_id, create_class, update_class, delete_class
+from bson.objectid import ObjectId
 
 class_bp = Blueprint('class_bp', __name__)
+
+def process_data(data):
+    for key, value in data.items():
+        if isinstance(value, ObjectId):
+            data[key] = str(value)
+        elif isinstance(value, list):
+            data[key] = [str(v) if isinstance(v, ObjectId) else v for v in value]
+    return data
 
 @class_bp.route('/<class_id>', methods=['GET'])
 def get_class(class_id):
     """Route to fetch a class by ID"""
     class_info = get_class_by_id(class_id)
     if class_info:
-        return jsonify(class_info), 200
+        return jsonify(process_data(class_info)), 200
     return jsonify({"error": "Class not found"}), 404
 
 @class_bp.route('/', methods=['POST'])
@@ -17,7 +26,7 @@ def add_class():
     class_data = request.json
     result = create_class(class_data)
     # Broken need to implement in create_class function
-    return jsonify({"message": "Class created", "id": str(result.inserted_id)}), 201
+    return jsonify({"message": "Class created", "id": str(result)}), 201
 
 @class_bp.route('/<class_id>', methods=['PUT'])
 def edit_class(class_id):
