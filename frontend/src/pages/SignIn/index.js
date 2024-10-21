@@ -61,6 +61,10 @@ const SignIn = () => {
           <p>Don't have an account?</p>
           <a href="/signup">Sign up</a>
         </div>
+        <div className="signup">
+          <p>Don't want an account?</p>
+          <a href="/">View Home</a>
+        </div>
       </div>
     </div>
   );
