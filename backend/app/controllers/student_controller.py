@@ -28,7 +28,7 @@ def create_student(student_data):
     student_collection = db["students"]
     try:
         student_object = student_collection.insert_one(student_data)
-        return student_object.inserted_id
+        return student_object
     except Exception as e:
         print(f"Error inserting student: {e}")
         return None

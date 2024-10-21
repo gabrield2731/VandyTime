@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, jsonify
 from flask_cors import CORS
 from .mongo import init_mongo
 from config import Config
@@ -21,6 +21,10 @@ def create_app():
 
     # Allow CORS for all origins
     CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
+
+    @app.route('/')
+    def index():
+        return jsonify({"message": "Welcome to the Flask App!"})
 
     # Register blueprints
     app.register_blueprint(student_bp, url_prefix='/student')
