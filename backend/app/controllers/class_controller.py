@@ -1,6 +1,5 @@
 from pymongo import MongoClient
 from bson.objectid import ObjectId
-from flask import current_app
 from dotenv import load_dotenv, find_dotenv
 import os
 
@@ -11,6 +10,7 @@ def get_class_by_id(class_id):
     client = MongoClient(os.getenv("MONGO_URI"))
     db = client["vandytime_db"]
     class_collection = db["classes"]
+
     try:
         class_object = class_collection.find_one({"_id": ObjectId(class_id)})
         return class_object
@@ -25,8 +25,20 @@ def create_class(class_data):
     client = MongoClient(os.getenv("MONGO_URI"))
     db = client["vandytime_db"]
     class_collection = db["classes"]
+
     try:
-        from .student_controller import update_student
+        if "grades" not in class_data:
+            class_data["grades"] = []
+
+        if "teacher" not in class_data:
+            return None
+        
+        if "name" not in class_data:
+            return None
+        
+        if get_class_by_teacher_and_name(class_data["name"], class_data["teacher"]):
+            return None
+
         class_object = class_collection.insert_one(class_data)
         return class_object.inserted_id
     except Exception as e:
@@ -41,7 +53,9 @@ def update_class(class_id, update_data):
     client = MongoClient(os.getenv("MONGO_URI"))
     db = client["vandytime_db"]
     class_collection = db["classes"]
+
     try:
+        print(update_data)
         class_object = class_collection.update_one({"_id": ObjectId(class_id)}, {"$set": update_data})
         return class_object
     except Exception as e:
@@ -56,16 +70,24 @@ def delete_class(class_id):
     client = MongoClient(os.getenv("MONGO_URI"))
     db = client["vandytime_db"]
     class_collection = db["classes"]
+
     try:
+        # Fetch the class data
         class_data = get_class_by_id(class_id)
-        class_grades = class_data["grades"]
+        
+        if not class_data:
+            return {"deleted_count": 0}
+
+        class_grades = class_data.get("grades", [])
         for grade_id in class_grades:
             delete_grade(grade_id)
+
         delete_object = class_collection.delete_one({"_id": ObjectId(class_id)})
+
         return {"deleted_count": delete_object.deleted_count}
     except Exception as e:
-        print(f"Error deleting student: {e}")
-        return None
+        print(f"Error deleting class: {e}")
+        return {"error": str(e)}
     finally:
         client.close()
 
@@ -74,8 +96,11 @@ def get_all_classes():
     client = MongoClient(os.getenv("MONGO_URI"))
     db = client["vandytime_db"]
     class_collection = db["classes"]
+
     try:
         class_list = list(class_collection.find())
+        for class_data in class_list:
+            class_data["_id"] = str(class_data["_id"])
         return class_list
     except Exception as e:
         print(f"Error getting all classes: {e}")
@@ -88,6 +113,7 @@ def get_teachers_for_class(class_name):
     client = MongoClient(os.getenv("MONGO_URI"))
     db = client["vandytime_db"]
     class_collection = db["classes"]
+
     try:
         classes = class_collection.find({"name": class_name})
         teacher_list = []
@@ -101,10 +127,11 @@ def get_teachers_for_class(class_name):
         client.close()
 
 # Get class from teacher and name
-def get_class_by_teacher_and_name(teacher, name):
+def get_class_by_teacher_and_name(name, teacher):
     client = MongoClient(os.getenv("MONGO_URI"))
     db = client["vandytime_db"]
     class_collection = db["classes"]
+
     try:
         class_object = class_collection.find_one({"teacher": teacher, "name": name})
         return class_object

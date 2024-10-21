@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from ..controllers.class_controller import get_class_by_id, create_class, update_class, delete_class
+from ..controllers.class_controller import get_class_by_id, create_class, update_class, delete_class, get_all_classes, get_teachers_for_class, get_class_by_teacher_and_name
 from bson.objectid import ObjectId
 
 class_bp = Blueprint('class_bp', __name__)
@@ -25,41 +25,52 @@ def add_class():
     """Route to create a new class"""
     class_data = request.json
     result = create_class(class_data)
-    # Broken need to implement in create_class function
-    return jsonify({"message": "Class created", "id": str(result)}), 201
+    
+    if result:
+        return jsonify({"message": "Class created", "id": str(result)}), 201
+    else:
+        return jsonify({"error": "Error creating class"}), 400
 
 @class_bp.route('/<class_id>', methods=['PUT'])
 def edit_class(class_id):
     """Route to update a class's details."""
     update_data = request.json
     result = update_class(class_id, update_data)
-    # Broken need to implement in create_class function
-    return jsonify({"message": "Class updated"}), 200 if result.modified_count > 0 else jsonify({"error": "No changes made"}), 400
+    
+    if result and result.modified_count > 0:
+        return jsonify({"message": "Class updated"}), 200
+    else:
+        return jsonify({"error": "No changes made"}), 400
 
 @class_bp.route('/<class_id>', methods=['DELETE'])
 def remove_class(class_id):
     """Route to delete a class."""
     result = delete_class(class_id)
-    # Broken need to implement in create_class function
-    return jsonify({"message": "Class deleted"}), 200 if result.deleted_count > 0 else jsonify({"error": "Class not found"}), 404
+
+    if result and result["deleted_count"] > 0:
+        return jsonify({"message": "Class deleted"}), 200
+    else:
+        return jsonify({"error": "Class not found"}), 404
 
 @class_bp.route('/', methods=['GET'])
 def get_classes():
     """Route to fetch all classes"""
     return jsonify(get_all_classes()), 200
 
-@class_bp.route('/<class_id>/teachers', methods=['GET'])
+@class_bp.route('/<class_name>/teachers', methods=['GET'])
 def get_teachers(class_name):
     """Route to fetch all teachers for a class"""
     teachers = get_teachers_for_class(class_name)
     if teachers:
         return jsonify(teachers), 200
-    return jsonify({"error": "Class not found"}), 404
+    else:
+        return jsonify({"error": "Class not found"}), 404
 
 @class_bp.route('/<class_name>/<teacher>', methods=['GET'])
 def get_class_by_teacher_and_name_route(class_name, teacher):
     """Route to fetch a class by name and"""
     class_info = get_class_by_teacher_and_name(class_name, teacher)
     if class_info:
-        return jsonify(class_info), 200
-    return jsonify({"error": "Class not found"}), 404
+        return jsonify(process_data(class_info)), 200
+    else:
+        return jsonify({"error": "Class not found"}), 404

@@ -20,14 +20,12 @@ def get_student(student_id):
         return jsonify(process_data(student)), 200
     return jsonify({"error": "Student not found"}), 404
 
-# Note: can make this different (where it does not pass the grades, and we create an empty grades array for them, connect to auth)
 @student_bp.route('/', methods=['POST'])
 def add_student():
     """Route to create a new student."""
     student_data = request.json
     result = create_student(student_data)
-    # Broken need to implement in create_class functions
-    return jsonify({"message": "Student created", "id": str(result)}), 201
+    return jsonify({"message": "Student created", "id": str(result.inserted_id)}), 201
 
 @student_bp.route('/<student_id>', methods=['PUT'])
 def edit_student(student_id):
@@ -43,7 +41,7 @@ def edit_student(student_id):
 def remove_student(student_id):
     """Route to delete a student."""
     result = delete_student(student_id)
-    if result:
+    if result and result["deleted_count"] > 0:
         return jsonify({"message": "Student deleted"}), 200
     else:
         return jsonify({"error": "Student not found"}), 404

@@ -16,6 +16,7 @@ def get_db_connection():
 def get_grade_by_id(grade_id):
     db, client = get_db_connection()
     grade_collection = db["grades"]
+
     try:
         grade_object = grade_collection.find_one({"_id": ObjectId(grade_id)})
         return grade_object
@@ -32,29 +33,24 @@ def create_grade(grade_data):
     grade_collection = db["grades"]
     student_collection = db["students"]
     class_collection = db["classes"]
+
     try:
-        # Insert the grade into the grades collection
+        if "student_id" not in grade_data or "class_id" not in grade_data:
+            return None
+
         grade_object = grade_collection.insert_one(grade_data)
 
-        # Get the inserted grade ID
         grade_id = grade_object.inserted_id
 
-        student_update_result = student_collection.update_one(
+        student_collection.update_one(
             {"_id": ObjectId(grade_data['student_id'])},
             {"$push": {"grades": grade_id}}
         )
 
-        # Use $push to add the grade ID to the class's grades array
-        class_update_result = class_collection.update_one(
+        class_collection.update_one(
             {"_id": ObjectId(grade_data['class_id'])},
             {"$push": {"grades": grade_id}}
         )
-
-        # Check if the updates were successful
-        if student_update_result.modified_count == 0:
-            print(f"Failed to update student {grade_data['student_id']} with the new grade.")
-        if class_update_result.modified_count == 0:
-            print(f"Failed to update class {grade_data['class_id']} with the new grade.")
         
         return grade_id
     except Exception as e:
@@ -67,6 +63,7 @@ def create_grade(grade_data):
 def update_grade(grade_id, update_data):
     db, client = get_db_connection()
     grade_collection = db["grades"]
+
     try:
         # Update the grade document using $set operator
         grade_object = grade_collection.update_one({"_id": ObjectId(grade_id)}, {"$set": update_data})
@@ -86,31 +83,21 @@ def delete_grade(grade_id):
     class_collection = db["classes"]
     
     try:
-        # Retrieve the grade document to get related student_id and class_id
         grade_data = get_grade_by_id(grade_id)
         if not grade_data:
             print(f"Grade with ID {grade_id} not found.")
             return None
 
-        # Use $pull to remove the grade ID from the student's grades array
-        student_update_result = student_collection.update_one(
+        student_collection.update_one(
             {"_id": ObjectId(grade_data['student_id'])},
             {"$pull": {"grades": ObjectId(grade_id)}}
         )
 
-        # Use $pull to remove the grade ID from the class's grades array
-        class_update_result = class_collection.update_one(
+        class_collection.update_one(
             {"_id": ObjectId(grade_data['class_id'])},
             {"$pull": {"grades": ObjectId(grade_id)}}
         )
 
-        # Check if the updates were successful
-        if student_update_result.modified_count == 0:
-            print(f"Failed to update student {grade_data['student_id']} by removing grade {grade_id}.")
-        if class_update_result.modified_count == 0:
-            print(f"Failed to update class {grade_data['class_id']} by removing grade {grade_id}.")
-
-        # Delete the grade document
         delete_result = grade_collection.delete_one({"_id": ObjectId(grade_id)})
         return {"deleted_count": delete_result.deleted_count}
     except Exception as e:

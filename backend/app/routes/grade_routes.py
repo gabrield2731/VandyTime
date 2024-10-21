@@ -25,7 +25,6 @@ def add_grade():
     """Route to create a new grade."""
     grade_data = request.json
     result = create_grade(grade_data)
-    # Broken need to implement in create_class functions
     return jsonify({"message": "Grade created", "id": str(result)}), 201
 
 @grade_bp.route('/<grade_id>', methods=['PUT'])
@@ -34,11 +33,17 @@ def edit_grade(grade_id):
     update_data = request.json
     result = update_grade(grade_id, update_data)
     # Broken need to implement in create_class function
-    return jsonify({"message": "Grade updated"}), 200 if result.modified_count > 0 else jsonify({"error": "No changes made"}), 400
+    if result and result.modified_count > 0:
+        return jsonify({"message": "Grade updated"}), 200
+    else:
+        return jsonify({"error": "No changes made"}), 400
 
 @grade_bp.route('/<grade_id>', methods=['DELETE'])
 def remove_grade(grade_id):
     """Route to delete a grade."""
     result = delete_grade(grade_id)
     # Broken need to implement in create_class function
-    return jsonify({"message": "Grade deleted"}), 200 if result.deleted_count > 0 else jsonify({"error": "Grade not found"}), 404
+    if result and result["deleted_count"] > 0:
+        return jsonify({"message": "Grade deleted"}), 200
+    else:
+        return jsonify({"error": "Grade not found"}), 404
