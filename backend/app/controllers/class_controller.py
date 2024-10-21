@@ -116,9 +116,10 @@ def get_teachers_for_class(class_name):
 
     try:
         classes = class_collection.find({"name": {"$regex": f"^{class_name}$", "$options": "i"}})
-        print(classes)
+        class_list = classes.to_list()
+        print(class_list)
         teacher_list = []
-        for class_data in classes.to_list():
+        for class_data in class_list:
             print(class_data)
             teacher_list.append(class_data["teacher"])
         return teacher_list
