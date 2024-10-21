@@ -1,14 +1,23 @@
 from flask import Blueprint, request, jsonify
 from ..controllers.grade_controller import get_grade_by_id, create_grade, update_grade, delete_grade
+from bson.objectid import ObjectId
 
 grade_bp = Blueprint('grade_bp', __name__)
+
+def process_data(data):
+    for key, value in data.items():
+        if isinstance(value, ObjectId):
+            data[key] = str(value)
+        elif isinstance(value, list):
+            data[key] = [str(v) if isinstance(v, ObjectId) else v for v in value]
+    return data
 
 @grade_bp.route('/<grade_id>', methods=['GET'])
 def get_grade(grade_id):
     """Route to fetch a grade by ID"""
     grade = get_grade_by_id(grade_id)
     if grade:
-        return jsonify(grade), 200
+        return jsonify(process_data(grade)), 200
     return jsonify({"error": "Grade not found"}), 404
 
 @grade_bp.route('/', methods=['POST'])
@@ -17,7 +26,7 @@ def add_grade():
     grade_data = request.json
     result = create_grade(grade_data)
     # Broken need to implement in create_class functions
-    return jsonify({"message": "Grade created", "id": str(result.inserted_id)}), 201
+    return jsonify({"message": "Grade created", "id": str(result)}), 201
 
 @grade_bp.route('/<grade_id>', methods=['PUT'])
 def edit_grade(grade_id):
