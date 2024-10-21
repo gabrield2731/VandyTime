@@ -134,7 +134,11 @@ def get_class_by_teacher_and_name(name, teacher):
     teacher = unquote(teacher)
 
     try:
-        class_object = class_collection.find_one({"teacher": teacher, "name": name})
+        class_object = class_collection.find_one({
+            "teacher": {"$regex": f"^{teacher}$", "$options": "i"},
+            "name": {"$regex": f"^{name}$", "$options": "i"}
+        })
+
         return class_object
     except Exception as e:
         print(f"Error getting class by teacher and name: {e}")
