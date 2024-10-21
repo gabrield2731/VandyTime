@@ -31,15 +31,22 @@ def create_app():
     app.register_blueprint(class_bp, url_prefix='/class')
     app.register_blueprint(grade_bp, url_prefix='/grade')
 
-    # Add CORS header before sending every response
+    @app.before_request
+    def handle_options_request():
+        if request.method == "OPTIONS":
+            response = app.make_default_options_response()
+            response.headers["Access-Control-Allow-Origin"] = "https://vandy-time-frontend.vercel.app"
+            response.headers["Access-Control-Allow-Headers"] = "Content-Type,Authorization"
+            response.headers["Access-Control-Allow-Methods"] = "GET,POST,PUT,DELETE,OPTIONS"
+            response.headers["Access-Control-Allow-Credentials"] = "true"
+            return response
+
     @app.after_request
-    def add_cors_headers(response):
-        # Allow all origins
-        response.headers["Access-Control-Allow-Origin"] = "*"
+    def after_request(response):
+        response.headers["Access-Control-Allow-Origin"] = "https://vandy-time-frontend.vercel.app"
         response.headers["Access-Control-Allow-Headers"] = "Content-Type,Authorization"
         response.headers["Access-Control-Allow-Methods"] = "GET,POST,PUT,DELETE,OPTIONS"
-        # Optional: if using cookies or HTTP auth, set this to "true"
-        response.headers["Access-Control-Allow-Credentials"] = "false"
+        response.headers["Access-Control-Allow-Credentials"] = "true"
         return response
 
     return app
