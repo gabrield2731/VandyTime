@@ -5,28 +5,28 @@ import "./styles.css";
 const BACKEND = process.env.REACT_APP_API_URL;
 
 const dummyGradeData = [
-  { grade: "A+", percentage: 2 },
-  { grade: "A", percentage: 5 },
-  { grade: "A-", percentage: 8 },
-  { grade: "B+", percentage: 7 },
-  { grade: "B", percentage: 6 },
-  { grade: "B-", percentage: 4 },
-  { grade: "C+", percentage: 0 },
-  { grade: "C", percentage: 2 },
-  { grade: "C-", percentage: 1 },
-  { grade: "D", percentage: 0 },
-  { grade: "F", percentage: 1 },
-  { grade: "P", percentage: 0 },
-  { grade: "NP", percentage: 0 },
+  { grade: "A+", count: 2 },
+  { grade: "A", count: 5 },
+  { grade: "A-", count: 8 },
+  { grade: "B+", count: 7 },
+  { grade: "B", count: 6 },
+  { grade: "B-", count: 4 },
+  { grade: "C+", count: 0 },
+  { grade: "C", count: 2 },
+  { grade: "C-", count: 1 },
+  { grade: "D", count: 0 },
+  { grade: "F", count: 1 },
+  { grade: "P", count: 0 },
+  { grade: "NP", count: 0 },
 ];
 
 const dummyCourseInfo = {
-  courseCode: "CS 4278",
-  courseName: "Principles of Software Engineering",
+  code: "CS 4278",
+  name: "Principles of Software Engineering",
   description:
     "The nature of software. The object-oriented paradigm. Software life-cycle models. Requirements, specification, design, implementation, documentation, and testing of software. Object-oriented analysis and design. Software maintenance.",
-  term: "Fall 2024",
-  instructor: "SINGH, V",
+  semester: "Fall 2024",
+  teacher: "SINGH, V",
   grades: [],
 };
 
@@ -36,13 +36,8 @@ const Grades = () => {
     useState("Choose a class");
   const [courseInfo, setCourseInfo] = useState(dummyCourseInfo);
   const [gradeData, setGradeData] = useState([]);
-  const [courses, setCourses] = useState([
-    "CS 1101",
-    "CS 2201",
-    "CS 3281",
-    "CS 4278",
-  ]);
-  const [teachers, setTeachers] = useState(["Choose a class"]);
+  const [courses, setCourses] = useState(["Select a class"]);
+  const [teachers, setTeachers] = useState(["Select a teacher"]);
   const [average, setAverage] = useState("A+");
 
   const handleCourseChange = (event) => {
@@ -91,8 +86,6 @@ const Grades = () => {
         { grade: "NP", count: 0 },
       ];
 
-      let totalGrades = 0;
-
       // Fetch each grade based on the IDs and update the count in the array directly
       for (let i = 0; i < gradeIds.length; i++) {
         const response = await fetch(`${BACKEND}/grade/${gradeIds[i]}`);
@@ -105,18 +98,10 @@ const Grades = () => {
         const gradeObj = gradesArray.find((g) => g.grade === grade.grade);
         if (gradeObj) {
           gradeObj.count++;
-          totalGrades++;
         }
       }
 
-      // Calculate the percentage for each grade in the fixed-length array
-      const consolidatedGrades = gradesArray.map((g) => ({
-        grade: g.grade,
-        percentage: totalGrades > 0 ? (g.count / totalGrades) * 100 : 0,
-      }));
-
-      // Update the grade data state
-      setGradeData(consolidatedGrades);
+      setGradeData(gradesArray);
     } catch (error) {
       console.error("Error fetching grades:", error);
     }
@@ -232,10 +217,16 @@ const Grades = () => {
       return "F";
     };
 
-    // Calculate the numerical values of valid grades
-    const numericalGrades = gradeData
-      .map(getGradeValue) // Convert each grade to its numerical value
-      .filter((value) => value !== null); // Filter out unrecognized grades (null values)
+    const numericalGrades = gradeData.flatMap((gradeObj) => {
+      const gradeValue = getGradeValue(gradeObj.grade);
+      if (gradeValue !== null) {
+        // Create an array of length `count` filled with the gradeValue
+        return Array(gradeObj.count).fill(gradeValue);
+      }
+      return []; // If gradeValue is null, return an empty array (no grades)
+    });
+
+    console.log(numericalGrades);
 
     // If there are no valid numerical grades, set average to "N/A"
     if (numericalGrades.length === 0) {
@@ -265,7 +256,8 @@ const Grades = () => {
           <select
             id="course-select"
             value={selectedCourse}
-            onChange={handleCourseChange}>
+            onChange={handleCourseChange}
+          >
             {courses.map((course) => (
               <option key={course} value={course}>
                 {course}
@@ -280,7 +272,8 @@ const Grades = () => {
           <select
             id="instructor-select"
             value={selectedInstructor}
-            onChange={handleInstructorChange}>
+            onChange={handleInstructorChange}
+          >
             {teachers.map((teacher) => (
               <option key={teacher} value={teacher}>
                 {teacher}
@@ -302,7 +295,7 @@ const Grades = () => {
             <BarChartComponent
               data={gradeData}
               xAxisKey="grade"
-              barDataKey="percentage"
+              barDataKey="count"
               barColor="#c4a55e"
             />
           </div>
@@ -310,10 +303,10 @@ const Grades = () => {
 
         {/* Course Information Section - Moved to the right */}
         <div className="course-info">
-          <h2>{courseInfo.courseCode}</h2>
+          <h2>{courseInfo.code}</h2>
           <p>{courseInfo.name}</p>
           <p>
-            {courseInfo.term} | Instructor: {courseInfo.teacher}
+            {courseInfo.semester} | Instructor: {courseInfo.teacher}
           </p>
           <p className="description">{courseInfo.description}</p>
           <div>
