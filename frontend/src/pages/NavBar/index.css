@@ -7,10 +7,14 @@ html, body {
 }
 
 .navbar {
-    background-color: #333;
-    padding: 10px 20px;
-    color: white;
-  }
+  position: -webkit-sticky; /* For Safari */
+  position: sticky;
+  top: 0; /* Stick to the top of the viewport */
+  background-color: #333; /* Background color to avoid transparency issues */
+  z-index: 1000; /* Ensure the navbar stays on top */
+  box-shadow: 0 4px 2px -2px gray; /* Optional: Add shadow for visual effect */
+  padding: 10px;
+}
   
   .navbar-container {
     display: flex;
@@ -41,14 +45,18 @@ html, body {
   }
   
   .nav-login .login-btn {
-    background-color: #007bff;
-    color: white;
+    background-color: #c4a55e;
+    color: black;
     padding: 5px 15px;
     border-radius: 5px;
     text-decoration: none;
   }
   
   .nav-login .login-btn:hover {
-    background-color: #0056b3;
+    background-color: #b08e52;
   }
-  
+
+  .logo-image {
+    width: 45px;
+    height: 32px;
+  }

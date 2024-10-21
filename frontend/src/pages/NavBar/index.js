@@ -1,6 +1,7 @@
 import React from 'react';
 import { useLocation } from 'react-router-dom';
 import './index.css';
+import logo from '../../assets/logo.png'; // Adjust the path based on your folder structure
 
 const Navbar = () => {
   const location = useLocation();
@@ -12,7 +13,7 @@ const Navbar = () => {
         <nav className="navbar">
           <div className="navbar-container">
             <div className="navbar-logo">
-              <a href="/">YourLogo</a>
+            <img src={logo} alt="VandyLogo" className="logo-image" />
             </div>
 
             <ul className="nav-links">

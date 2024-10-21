@@ -51,7 +51,7 @@ select {
 button {
   padding: 10px 20px;
   background-color: #c4a55e; /* New Gold color for button */
-  color: #ffffff; /* White button text */
+  color: black; /* White button text */
   border: none;
   border-radius: 5px;
   cursor: pointer;
