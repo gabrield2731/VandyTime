@@ -115,9 +115,7 @@ def get_teachers_for_class(class_name):
         classes = get_all_classes()
         teacher_list = []
         decoded_class_name = unquote(class_name)
-        print(decoded_class_name.lower())
         for class_data in classes:
-            print(class_data["name"].lower())
             if class_data["name"].lower() == decoded_class_name.lower():
                 teacher_list.append(class_data["teacher"])
         return teacher_list
@@ -131,6 +129,9 @@ def get_class_by_teacher_and_name(name, teacher):
     client = MongoClient(os.getenv("MONGO_URI"))
     db = client["vandytime_db"]
     class_collection = db["classes"]
+
+    name = unquote(name)
+    teacher = unquote(teacher)
 
     try:
         class_object = class_collection.find_one({"teacher": teacher, "name": name})
