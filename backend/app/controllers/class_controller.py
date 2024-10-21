@@ -110,24 +110,17 @@ def get_all_classes():
 
 # Get all teachers for a class
 def get_teachers_for_class(class_name):
-    client = MongoClient(os.getenv("MONGO_URI"))
-    db = client["vandytime_db"]
-    class_collection = db["classes"]
-
     try:
-        classes = class_collection.find({"name": {"$regex": f"^{class_name}$", "$options": "i"}})
-        class_list = classes.to_list()
-        print(class_list)
+        classes = get_all_classes()
         teacher_list = []
-        for class_data in class_list:
-            print(class_data)
-            teacher_list.append(class_data["teacher"])
+        for class_data in classes:
+            if class_data["name"].lower() == class_name.lower():
+                teacher_list.append(class_data["teacher"])
         return teacher_list
     except Exception as e:
         print(f"Error getting teachers for class: {e}")
         return None
-    finally:
-        client.close()
+
 
 # Get class from teacher and name
 def get_class_by_teacher_and_name(name, teacher):
