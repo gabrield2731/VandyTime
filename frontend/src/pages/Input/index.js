@@ -6,13 +6,7 @@ import "./styles.css";
 const courses = ["CS 168", "CS 161", "CS 162", "CS 169"];
 
 // Dummy list of professors for filtering
-const professors = [
-  "All",
-  "RATNASAMY, S",
-  "GARCIA, L",
-  "KUBITZ, N",
-  "LEE, H",
-];
+const professors = ["All", "RATNASAMY, S", "GARCIA, L", "KUBITZ, N", "LEE, H"];
 
 const grades = ["A", "B", "C", "D", "F"];
 
@@ -47,74 +41,76 @@ const Input = () => {
   };
 
   return (
-    <div className="container">
-      <h1>Input</h1>
-      <h3>Enter Your Class Data Below</h3>
+    <>
+      {user && (
+        <div className="container">
+          <h1>Input</h1>
+          <h3>Enter Your Class Data Below</h3>
 
-      {/* Course Selector */}
-      <div className="course-selector">
-        <label htmlFor="course-select">Select Course: </label>
-        <select
-          id="course-select"
-          value={selectedCourse}
-          onChange={handleCourseChange}
-        >
-          {courses.map((course) => (
-            <option key={course} value={course}>
-              {course}
-            </option>
-          ))}
-        </select>
-      </div>
+          {/* Course Selector */}
+          <div className="course-selector">
+            <label htmlFor="course-select">Select Course: </label>
+            <select
+              id="course-select"
+              value={selectedCourse}
+              onChange={handleCourseChange}>
+              {courses.map((course) => (
+                <option key={course} value={course}>
+                  {course}
+                </option>
+              ))}
+            </select>
+          </div>
 
-      {/* Professor Selector */}
-      <div className="professor-selector">
-        <label htmlFor="professor-select">Select Professor: </label>
-        <select
-          id="professor-select"
-          value={selectedProfessor}
-          onChange={handleProfessorChange}
-        >
-          {professors.map((professor) => (
-            <option key={professor} value={professor}>
-              {professor}
-            </option>
-          ))}
-        </select>
-      </div>
+          {/* Professor Selector */}
+          <div className="professor-selector">
+            <label htmlFor="professor-select">Select Professor: </label>
+            <select
+              id="professor-select"
+              value={selectedProfessor}
+              onChange={handleProfessorChange}>
+              {professors.map((professor) => (
+                <option key={professor} value={professor}>
+                  {professor}
+                </option>
+              ))}
+            </select>
+          </div>
 
-        {/* Grade Selector */}
-        <div className="grade-selector">
-        <label htmlFor="grade-select">Select Grade: </label>
-        <select
-          id="grade-select"
-          value={selectedGrade}
-          onChange={handleGradeChange}
-        >
-          {grades.map((grade) => (
-            <option key={grade} value={grade}>
-              {grade}
-            </option>
-          ))}
-        </select>
-      </div>
+          {/* Grade Selector */}
+          <div className="grade-selector">
+            <label htmlFor="grade-select">Select Grade: </label>
+            <select
+              id="grade-select"
+              value={selectedGrade}
+              onChange={handleGradeChange}>
+              {grades.map((grade) => (
+                <option key={grade} value={grade}>
+                  {grade}
+                </option>
+              ))}
+            </select>
+          </div>
 
-      {/* Review Box */}
-      <div className="review-box">
-        <textarea
-          id="user-input"
-          value={inputValue}
-          onChange={handleInputChange}
-          placeholder="Enter review"
-          rows={5} // Start with multiple rows (adjust as needed)
-        />
-      </div>
+          {/* Review Box */}
+          <div className="review-box">
+            <textarea
+              id="user-input"
+              value={inputValue}
+              onChange={handleInputChange}
+              placeholder="Enter review"
+              rows={5} // Start with multiple rows (adjust as needed)
+            />
+          </div>
 
-      {/* Submit Button */}
-      <div className="button-container">
-        <button onClick={handleSubmit}>Submit</button>
-      </div>
-    </div>  
+          {/* Submit Button */}
+          <div className="button-container">
+            <button onClick={handleSubmit}>Submit</button>
+          </div>
+        </div>
+      )}
+      {!user && <h1>Please log in to access this page</h1>}
+    </>
   );
 };
 
