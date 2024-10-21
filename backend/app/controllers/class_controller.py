@@ -113,7 +113,9 @@ def get_teachers_for_class(class_name):
     try:
         classes = get_all_classes()
         teacher_list = []
+        print(class_name.lower())
         for class_data in classes:
+            print(class_data["name"].lower())
             if class_data["name"].lower() == class_name.lower():
                 teacher_list.append(class_data["teacher"])
         return teacher_list
