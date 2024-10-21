@@ -115,9 +115,9 @@ def get_teachers_for_class(class_name):
     class_collection = db["classes"]
 
     try:
-        classes = class_collection.find({"name": class_name})
+        classes = class_collection.find({"name": {"$regex": f"^{class_name}$", "$options": "i"}})
         teacher_list = []
-        for class_data in classes:
+        for class_data in classes.to_list():
             teacher_list.append(class_data["teacher"])
         return teacher_list
     except Exception as e:
