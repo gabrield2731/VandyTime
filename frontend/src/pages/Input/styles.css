@@ -1,0 +1,131 @@
+/* General Page Styling */
+body {
+    font-family: "Arial", sans-serif;
+    background-color: #ffffff; /* Light background */
+    margin: 0;
+    padding: 0;
+    color: #333333; /* Dark text color */
+  }
+  
+  h1 {
+    font-size: 32px;
+    color: #c4a55e; /* Gold color for emphasis */
+    text-align: center; /* Center align the main title */
+  }
+  
+  h3 {
+    font-size: 24px;
+    color: #333333; /* Dark text for subheadings */
+    margin-bottom: 15px;
+    text-align: center; /* Center align the subheading */
+  }
+  
+  /* Input Section Styling */
+  .container {
+    max-width: 1200px; /* Maximum width for the container */
+    margin: 0 auto; /* Center the container */
+    padding: 20px;
+  }
+  
+  input,
+  select {
+    padding: 10px; /* Increased padding for better usability */
+    border: 1px solid #cccccc; /* Light border for input */
+    border-radius: 5px;
+    background-color: #ffffff; /* White background for input */
+    color: #333333; /* Dark text */
+    font-size: 16px;
+  }
+  
+  button {
+    padding: 10px 20px;
+    background-color: #c4a55e; /* Gold color for button */
+    color: #ffffff; /* White button text */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease; /* Smooth transition */
+  }
+  .button-container {
+    display: flex; /* Use flexbox to center */
+    align-items: center;
+    justify-content: center; /* Center the button horizontally */
+    margin-top: 20px; /* Add space above the button */
+  }
+  
+  button:hover {
+    background-color: #b08e52; /* Darker version of gold on hover */
+  }
+
+.review-box textarea,
+.course-selector select,
+.professor-selector select ,
+.grade-selector select{
+  width: 100%; /* Full width for the input elements */
+  max-width: 400px; /* Limit max width if needed */
+  padding: 10px; /* Add padding for better usability */
+  border: 1px solid #cccccc; /* Light border for input */
+  border-radius: 5px; /* Rounded corners */
+}
+
+  
+  /* Review Box Styling */
+  .review-box {
+    margin: 20px 0; /* Space around the review box */
+    text-align: center; /* Center text in the review box */
+  }
+  
+  .review-box textarea {
+    height: 100px; /* Fixed height for the text box */
+    width: 100%; /* Full width for the text box */
+    resize: none; /* Prevent manual resizing */
+    padding: 10px; /* Add padding for better usability */
+    border: 1px solid #cccccc; /* Light border for input */
+    border-radius: 5px; /* Rounded corners */
+  }
+  
+  /* Flexbox to align Course Selector */
+  .course-selector {
+    display: flex;
+    flex-direction: column; /* Stack selectors vertically */
+    align-items: center;
+    gap: 20px;
+    margin-top: 20px;
+    margin-bottom: 20px; /* Space below selectors */
+  }
+
+  /* Flexbox to align Course Selector */
+  .professor-selector {
+    display: flex;
+    flex-direction: column; /* Stack selectors vertically */
+    align-items: center;
+    gap: 20px;
+    margin-top: 20px;
+    margin-bottom: 20px; /* Space below selectors */
+  }
+
+    /* Flexbox to align Course Selector */
+    .grade-selector {
+        display: flex;
+        flex-direction: column; /* Stack selectors vertically */
+        align-items: center;
+        gap: 20px;
+        margin-top: 20px;
+        margin-bottom: 20px; /* Space below selectors */
+        }
+  
+  /* General Styling for Filters */
+  .filters {
+    margin-bottom: 20px; /* Space below filters */
+  }
+  
+  /* Footer Styling */
+  footer {
+    background-color: #f5f5f5; /* Light gray footer */
+    padding: 10px 0;
+    text-align: center;
+    color: #c4a55e; /* Gold text for footer */
+    margin-top: 30px;
+  }
+  
