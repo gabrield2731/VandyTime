@@ -20,6 +20,20 @@ def get_student_by_id(student_id):
     finally:
         client.close()
 
+def get_student_by_fid(student_id):
+    client = MongoClient(os.getenv("MONGO_URI"))
+    db = client["vandytime_db"]
+    student_collection = db["students"]
+
+    try:
+        student_object = student_collection.find_one({"firebase_id": student_id})
+        return student_object
+    except Exception as e:
+        print(f"Error getting student by ID: {e}")
+        return None
+    finally:
+        client.close()
+
 # Insert a new student into the MongoDB collection
 # Student is always inserted with empty classes and grades list
 def create_student(student_data):

@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from ..controllers.student_controller import get_student_by_id, create_student, update_student, delete_student
+from ..controllers.student_controller import get_student_by_id, get_student_by_fid, create_student, update_student, delete_student
 from bson.objectid import ObjectId
 
 # Create a blueprint for student-related route
@@ -16,6 +16,13 @@ def process_data(data):
 @student_bp.route('/<student_id>', methods=['GET'])
 def get_student(student_id):
     student = get_student_by_id(student_id)
+    if student:
+        return jsonify(process_data(student)), 200
+    return jsonify({"error": "Student not found"}), 404
+
+@student_bp.route('/fid/<student_fid>', methods=['GET'])
+def get_student_fid(student_fid):
+    student = get_student_by_fid(student_fid)
     if student:
         return jsonify(process_data(student)), 200
     return jsonify({"error": "Student not found"}), 404
