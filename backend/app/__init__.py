@@ -31,4 +31,15 @@ def create_app():
     app.register_blueprint(class_bp, url_prefix='/class')
     app.register_blueprint(grade_bp, url_prefix='/grade')
 
+    # Add CORS header before sending every response
+    @app.after_request
+    def add_cors_headers(response):
+        # Allow all origins
+        response.headers["Access-Control-Allow-Origin"] = "*"
+        response.headers["Access-Control-Allow-Headers"] = "Content-Type,Authorization"
+        response.headers["Access-Control-Allow-Methods"] = "GET,POST,PUT,DELETE,OPTIONS"
+        # Optional: if using cookies or HTTP auth, set this to "true"
+        response.headers["Access-Control-Allow-Credentials"] = "false"
+        return response
+
     return app
