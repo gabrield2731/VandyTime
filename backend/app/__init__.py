@@ -19,8 +19,8 @@ def create_app():
     except Exception as e:
         print(f"Failed to connect to MongoDB: {e}")
 
-    # Automatically handle CORS
-    CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
+    # Allow CORS for specific origins, including localhost for development
+    CORS(app, resources={r"/*": {"origins": ["https://vandy-time-frontend.vercel.app", "http://localhost:3000"]}})
 
     @app.route('/')
     def index():
@@ -31,11 +31,12 @@ def create_app():
     app.register_blueprint(class_bp, url_prefix='/class')
     app.register_blueprint(grade_bp, url_prefix='/grade')
 
+    # Handle OPTIONS requests globally
     @app.before_request
     def handle_options_request():
         if request.method == "OPTIONS":
             response = app.make_default_options_response()
-            response.headers["Access-Control-Allow-Origin"] = "https://vandy-time-frontend.vercel.app"
+            response.headers["Access-Control-Allow-Origin"] = request.headers.get("Origin")
             response.headers["Access-Control-Allow-Headers"] = "Content-Type,Authorization"
             response.headers["Access-Control-Allow-Methods"] = "GET,POST,PUT,DELETE,OPTIONS"
             response.headers["Access-Control-Allow-Credentials"] = "true"
@@ -43,7 +44,10 @@ def create_app():
 
     @app.after_request
     def after_request(response):
-        response.headers["Access-Control-Allow-Origin"] = "https://vandy-time-frontend.vercel.app"
+        # Allow origin dynamically based on the incoming request's origin
+        origin = request.headers.get("Origin")
+        if origin in ["https://vandy-time-frontend.vercel.app", "http://localhost:3000"]:
+            response.headers["Access-Control-Allow-Origin"] = origin
         response.headers["Access-Control-Allow-Headers"] = "Content-Type,Authorization"
         response.headers["Access-Control-Allow-Methods"] = "GET,POST,PUT,DELETE,OPTIONS"
         response.headers["Access-Control-Allow-Credentials"] = "true"
