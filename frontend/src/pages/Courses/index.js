@@ -1,71 +1,85 @@
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
-// const user = useAuth(); // This will give you the current Firebase user
-const classList = [
-  {
-    courseCode: "CS 1101",
-    courseName: "Introduction to the Internet: Architecture and Protocols",
-    professor: "Elena",
-  },
-  {
-    courseCode: "CS 2201",
-    courseName: "Data Structures and Algorithms",
-    professor: "Bob",
-  },
-  {
-    courseCode: "CS 3251",
-    courseName: "Operating Systems and System Programming",
-    professor: "Dave",
-  },
-  {
-    courseCode: "CS 3270",
-    courseName: "Software Engineering",
-    professor: "Stuart",
-  },
-];
+const BACKEND = process.env.REACT_APP_API_URL;
 
 const Courses = () => {
-  // define use states
+  // Define use states
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedProfessor, setSelectedProfessor] = useState("All");
-  const [professors, setProfessors] = useState([
-    "All",
-    "Elena",
-    "Bob",
-    "Dave",
-    "Stuart",
-  ]);
-  const [courseList, setCourses] = useState(classList);
+  const [professors, setProfessors] = useState([]);
+  const [courseList, setCourses] = useState([]);
+  const [filteredCourses, setFilteredCourses] = useState([]);
 
   // Handle changes in the search input
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
   };
 
-  // Handle changes in professor and department filters
+  // Handle changes in professor filter
   const handleProfessorChange = (event) => {
     setSelectedProfessor(event.target.value);
   };
 
-  // Filter the courses based on the search term, professor, and department
-  const filteredCourses = courseList.filter((course) => {
-    const matchesSearch =
-      course.courseName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      course.courseCode.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesProfessor =
-      selectedProfessor === "All" || course.professor === selectedProfessor;
+  // Function to filter courses based on search term and professor
+  useEffect(() => {
+    const filterCourses = () => {
+      let filtered = courseList;
 
-    return matchesSearch && matchesProfessor;
-  });
+      // Filter by search term (course code or course name)
+      if (searchTerm) {
+        filtered = filtered.filter(
+          (course) =>
+            course.code.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            course.name.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+      }
+
+      // Filter by selected professor (if not "All")
+      if (selectedProfessor !== "All") {
+        filtered = filtered.filter(
+          (course) => course.teacher === selectedProfessor
+        );
+      }
+
+      setFilteredCourses(filtered);
+    };
+
+    filterCourses();
+  }, [searchTerm, selectedProfessor, courseList]);
 
   useEffect(() => {
-    // TODO:
-    // Fetch the list of all classes from the backend and set classLis to this value (may need to format data to fit current format)
-    setCourses(classList);
-    // TODO:
-    // Fetch the list of all professors from the backend and set professors to this value
-    setProfessors(["All", "Elena", "Bob", "Dave", "Stuart"]);
-  } , []);
+    // Fetch the list of all classes from the backend and set courseList
+    const fetchAllClasses = async () => {
+      try {
+        const response = await fetch(`${BACKEND}/class`);
+        if (!response.ok) {
+          throw new Error("Failed to fetch classes");
+        }
+        const data = await response.json();
+        console.log(data);
+        setCourses(data);
+      } catch (error) {
+        console.error("Error fetching courses:", error);
+      }
+    };
+    fetchAllClasses();
+
+    // Fetch the list of all professors from the backend and set professors
+    const fetchAllProfessors = async () => {
+      try {
+        const response = await fetch(`${BACKEND}/class/allTeachers`);
+        if (!response.ok) {
+          throw new Error("Failed to fetch professors");
+        }
+        const data = await response.json();
+        setProfessors(["All", ...data]);
+      } catch (error) {
+        console.error("Error fetching professors:", error);
+      }
+    };
+    fetchAllProfessors();
+  }, []);
 
   return (
     <div style={{ padding: "20px" }}>
@@ -73,6 +87,7 @@ const Courses = () => {
 
       {/* Search Bar */}
       <div style={{ marginBottom: "20px" }}>
+      <label htmlFor="professor-select">Filter by Course: </label>
         <input
           type="text"
           placeholder="Search for a course by name or code"
@@ -111,7 +126,7 @@ const Courses = () => {
         {filteredCourses.length > 0 ? (
           filteredCourses.map((course) => (
             <div
-              key={course.courseCode}
+              key={course._id}
               style={{
                 border: "1px solid #ccc",
                 borderRadius: "10px",
@@ -122,15 +137,20 @@ const Courses = () => {
               }}
             >
               {/* TODO: Make it so the grades page has access to the courseCode and teacher so it can query when there */}
-              <a href="/grades" style={{color: "#0000EE"}}>{course.courseCode}</a>
-              <p>{course.courseName}</p>
+              <Link
+                to="/grades"
+                state={{ code: course.name, teacher: course.teacher }}
+              >
+                {course.code}
+              </Link>
+              <p>{course.name}</p>
               <p>
-                <strong>Professor:</strong> {course.professor}
+                <strong>Professor:</strong> {course.teacher}
               </p>
             </div>
           ))
         ) : (
-          <p>No courses found</p>
+          <p>No courses found.</p>
         )}
       </div>
     </div>
