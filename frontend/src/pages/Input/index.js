@@ -50,7 +50,7 @@ const Input = () => {
       const data = await res.json();
       const classId = data.id;
 
-      const userRes = await fetch(`${BACKEND}/user/fid/${user.uid}`);
+      const userRes = await fetch(`${BACKEND}/student/fid/${user.uid}`);
       if (!userRes.ok) {
         throw new Error("Failed to fetch user");
       }
@@ -73,6 +73,8 @@ const Input = () => {
       if (!gradeRes.ok) {
         throw new Error("Failed to post grade");
       }
+
+      window.location.reload();
     } catch (error) {
       console.error("Error posting grade:", error);
     }
