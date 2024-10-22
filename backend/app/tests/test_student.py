@@ -16,7 +16,7 @@ student_collection = db["students"]
 
 @pytest.fixture(scope="module")
 def test_db():
-    yield student_collection  # Provide the collection for testing
+    yield student_collection
 
 # Helper function to create test student data
 def create_test_student_data(email, firebase_id):
@@ -50,8 +50,8 @@ def test_create_student(test_db):
     student1 = create_test_student_data("student3@test.com", "firebase3")
     student2 = create_test_student_data("student4@test.com", "firebase4")
 
-    student1_id = create_student(student1)
-    student2_id = create_student(student2)
+    student1_id = create_student(student1).inserted_id
+    student2_id = create_student(student2).inserted_id
 
     try:
         inserted_student1 = test_db.find_one({"_id": ObjectId(student1_id)})
