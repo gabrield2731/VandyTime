@@ -25,7 +25,6 @@ const dummyCourseInfo = {
   name: "Principles of Software Engineering",
   description:
     "The nature of software. The object-oriented paradigm. Software life-cycle models. Requirements, specification, design, implementation, documentation, and testing of software. Object-oriented analysis and design. Software maintenance.",
-  semester: "Fall 2024",
   teacher: "SINGH, V",
   grades: [],
 };
@@ -122,15 +121,12 @@ const Grades = () => {
         let coursesSet = new Set();
         data.forEach((course) => {
           if (course.name && course.name.trim() !== "") {
-            // Normalize to lowercase (or another consistent format) to avoid case duplicates
-            coursesSet.add(course.name.trim().toLowerCase());
+            coursesSet.add(course.name.trim());
           }
         });
 
         // Convert set back to an array and format class names if needed (e.g., capitalize)
-        const sorted = Array.from(coursesSet)
-          .map((name) => name.toUpperCase()) // Example formatting
-          .sort();
+        const sorted = Array.from(coursesSet).sort();
 
         setCourses(sorted);
         setSelectedCourse(sorted[0]);
@@ -306,7 +302,7 @@ const Grades = () => {
           <h2>{courseInfo.code}</h2>
           <p>{courseInfo.name}</p>
           <p>
-            {courseInfo.semester} | Instructor: {courseInfo.teacher}
+            Instructor: {courseInfo.teacher}
           </p>
           <p className="description">{courseInfo.description}</p>
           <div>
