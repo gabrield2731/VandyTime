@@ -1,16 +1,16 @@
 import pytest
-from pymongo import MongoClient
 from bson.objectid import ObjectId
-import os
-from app.controllers.grade_controller import get_grade_by_id, create_grade, update_grade, delete_grade
+from app.controllers.grade_controller import create_grade, get_grade_by_id, update_grade, delete_grade
 from app.controllers.student_controller import create_student
 from app.controllers.class_controller import create_class
+from dotenv import load_dotenv, find_dotenv
+import os
+from pymongo import MongoClient
 
 # Load environment variables for MongoDB connection
-from dotenv import load_dotenv, find_dotenv
 load_dotenv(find_dotenv())
 
-# Initialize test database connection
+# Initialize MongoDB connection
 MONGO_URI = os.getenv("MONGO_URI")
 client = MongoClient(MONGO_URI)
 db = client["vandytime_db"]
@@ -20,31 +20,18 @@ class_collection = db["classes"]
 
 @pytest.fixture(scope="module")
 def test_db():
-    yield grade_collection  # Return the collection to use in the tests
+    yield grade_collection
 
 def create_test_student_data(email, firebase_id):
-    return {
-        "email": email,
-        "firebase_id": firebase_id,
-        "classes": [],
-        "grades": []
-    }
+    return {"email": email, "firebase_id": firebase_id, "classes": [], "grades": []}
 
 def create_test_class_data(name, semester, teacher):
-    return {
-        "name": name,
-        "semester": semester,
-        "teacher": teacher,
-        "grades": []
-    }
+    return {"name": name, "semester": semester, "teacher": teacher, "grades": []}
 
 def create_test_grade_data(student_id, class_id, grade_value):
-    return {
-        "student_id": student_id,
-        "class_id": class_id,
-        "grade": grade_value
-    }
+    return {"student_id": student_id, "class_id": class_id, "grade": grade_value}
 
+# Test the get_grade_by_id function
 def test_get_grade_by_id(test_db):
     grade1 = create_test_grade_data("student1_id", "class1_id", 85)
     grade2 = create_test_grade_data("student2_id", "class2_id", 90)
@@ -53,80 +40,81 @@ def test_get_grade_by_id(test_db):
     grade2_id = test_db.insert_one(grade2).inserted_id
 
     try:
-        fetched_grade1 = get_grade_by_id(grade1_id)
-        fetched_grade2 = get_grade_by_id(grade2_id)
-        assert fetched_grade1["grade"] == 85
-        assert fetched_grade2["grade"] == 90
+        assert get_grade_by_id(grade1_id)["grade"] == 85, f"Expected 85 but got {get_grade_by_id(grade1_id)}"
+        assert get_grade_by_id(grade2_id)["grade"] == 90, f"Expected 90 but got {get_grade_by_id(grade2_id)}"
     finally:
         test_db.delete_one({"_id": grade1_id})
         test_db.delete_one({"_id": grade2_id})
 
+# Test the create_grade function
+# Test the create_grade function
 def test_create_grade(test_db):
-    student1_id = create_student(create_test_student_data("student1@test.com", "firebase1"))
-    student2_id = create_student(create_test_student_data("student2@test.com", "firebase2"))
+    # Create students and classes first
+    student1 = create_test_student_data("student1@test.com", "firebase1")
+    student2 = create_test_student_data("student2@test.com", "firebase2")
 
-    class1_id = create_class(create_test_class_data("Class A", "Fall 2024", "Teacher A"))
-    class2_id = create_class(create_test_class_data("Class B", "Spring 2024", "Teacher B"))
+    student1_id = create_student(student1).inserted_id
+    student2_id = create_student(student2).inserted_id
 
-    grade1 = create_test_grade_data(student1_id, class1_id, 95)
-    grade2 = create_test_grade_data(student2_id, class2_id, 88)
+    class1 = create_test_class_data("Class A", "Fall 2024", "Teacher A")
+    class2 = create_test_class_data("Class B", "Spring 2024", "Teacher B")
 
-    grade1_id = create_grade(grade1)
-    grade2_id = create_grade(grade2)
+    class1_id = create_class(class1)
+    class2_id = create_class(class2)
+
+    grade1_id = create_grade(create_test_grade_data(student1_id, class1_id, 95))
+    grade2_id = create_grade(create_test_grade_data(student2_id, class2_id, 88))
 
     try:
-        assert test_db.find_one({"_id": ObjectId(grade1_id)})["grade"] == 95
-        assert test_db.find_one({"_id": ObjectId(grade2_id)})["grade"] == 88
+        grade1 = test_db.find_one({"_id": ObjectId(grade1_id)})
+        grade2 = test_db.find_one({"_id": ObjectId(grade2_id)})
+
+        assert grade1 is not None, "Grade 1 not found in the database"
+        assert grade2 is not None, "Grade 2 not found in the database"
+        assert grade1["grade"] == 95, f"Expected grade 95, but got {grade1['grade']}"
+        assert grade2["grade"] == 88, f"Expected grade 88, but got {grade2['grade']}"
+
     finally:
-        test_db.delete_one({"_id": ObjectId(grade1_id)})
-        test_db.delete_one({"_id": ObjectId(grade2_id)})
+        test_db.delete_one({"_id": ObjectId(grade1_id)}) if grade1_id else None
+        test_db.delete_one({"_id": ObjectId(grade2_id)}) if grade2_id else None
         student_collection.delete_one({"_id": ObjectId(student1_id)})
         student_collection.delete_one({"_id": ObjectId(student2_id)})
         class_collection.delete_one({"_id": ObjectId(class1_id)})
         class_collection.delete_one({"_id": ObjectId(class2_id)})
 
+# Test the update_grade function
 def test_update_grade(test_db):
-    student_id = create_student(create_test_student_data("student3@test.com", "firebase3"))
-    class_id = create_class(create_test_class_data("Class C", "Winter 2024", "Teacher C"))
+    student = create_test_student_data("student3@test.com", "firebase3")
+    student_id = create_student(student).inserted_id
 
-    grade = create_test_grade_data(student_id, class_id, 75)
-    grade_id = test_db.insert_one(grade).inserted_id
+    class_ = create_test_class_data("Class C", "Winter 2024", "Teacher C")
+    class_id = create_class(class_)
+
+    grade_id = create_grade(create_test_grade_data(student_id, class_id, 75))
 
     try:
-        update_grade(grade_id, {"grade": 80})
-        assert test_db.find_one({"_id": grade_id})["grade"] == 80
+        update_result = update_grade(grade_id, {"grade": 80})
+        assert update_result.modified_count == 1, "Failed to update grade"
+
+        updated_grade = test_db.find_one({"_id": ObjectId(grade_id)})
+        assert updated_grade["grade"] == 80, f"Expected 80 but got {updated_grade['grade']}"
+
     finally:
-        test_db.delete_one({"_id": grade_id})
+        test_db.delete_one({"_id": ObjectId(grade_id)})
         student_collection.delete_one({"_id": ObjectId(student_id)})
         class_collection.delete_one({"_id": ObjectId(class_id)})
 
+# Test the delete_grade function
 def test_delete_grade(test_db):
-    student1 = create_test_student_data("student4@test.com", "firebase4")
-    student2 = create_test_student_data("student5@test.com", "firebase5")
+    student1_id = student_collection.insert_one(create_test_student_data("student4@test.com", "firebase4")).inserted_id
+    class1_id = class_collection.insert_one(create_test_class_data("Class D", "Summer 2024", "Teacher D")).inserted_id
 
-    student1_id = student_collection.insert_one(student1).inserted_id
-    student2_id = student_collection.insert_one(student2).inserted_id
-
-    class1 = create_test_class_data("Class D", "Summer 2024", "Teacher D")
-    class2 = create_test_class_data("Class E", "Spring 2025", "Teacher E")
-
-    class1_id = class_collection.insert_one(class1).inserted_id
-    class2_id = class_collection.insert_one(class2).inserted_id
-
-    grade1 = create_test_grade_data(student1_id, class1_id, 85)
-    grade2 = create_test_grade_data(student2_id, class2_id, 90)
-
-    grade1_id = test_db.insert_one(grade1).inserted_id
-    grade2_id = test_db.insert_one(grade2).inserted_id
+    grade_id = create_grade(create_test_grade_data(student1_id, class1_id, 85))
 
     try:
-        assert delete_grade(grade1_id)["deleted_count"] == 1
-        assert delete_grade(grade2_id)["deleted_count"] == 1
-
-        assert test_db.find_one({"_id": grade1_id}) is None
-        assert test_db.find_one({"_id": grade2_id}) is None
+        delete_result = delete_grade(grade_id)
+        assert delete_result["deleted_count"] == 1, "Failed to delete grade"
+        assert test_db.find_one({"_id": ObjectId(grade_id)}) is None, "Grade not deleted"
     finally:
         student_collection.delete_one({"_id": ObjectId(student1_id)})
-        student_collection.delete_one({"_id": ObjectId(student2_id)})
         class_collection.delete_one({"_id": ObjectId(class1_id)})
-        class_collection.delete_one({"_id": ObjectId(class2_id)})
