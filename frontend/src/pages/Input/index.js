@@ -70,7 +70,7 @@ const Input = () => {
       const gradeData = await gradeRes.json();
       console.log("Grade posted:", gradeData);
 
-      // window.location.reload();
+      window.location.reload();
     } catch (error) {
       console.error("Error posting grade:", error);
     }
