@@ -102,6 +102,8 @@ def get_all_classes():
         class_list = list(class_collection.find())
         for class_data in class_list:
             class_data["_id"] = str(class_data["_id"])
+            for grade_id in class_data["grades"]:
+                class_data["grades"][class_data["grades"].index(grade_id)] = str(grade_id)
         return class_list
     except Exception as e:
         print(f"Error getting all classes: {e}")
