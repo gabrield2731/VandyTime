@@ -4,11 +4,6 @@ import "./styles.css";
 
 const BACKEND = process.env.REACT_APP_API_URL;
 
-// Dummy list of courses
-
-// Dummy list of professors for filtering
-const p = ["RATNASAMY, S", "GARCIA, L", "KUBITZ, N", "LEE, H"];
-
 const grades = [
   "A+",
   "A",
@@ -29,11 +24,10 @@ const Input = () => {
   const user = useAuth();
 
   const [courses, setCourses] = useState([]);
-  const [professors, setProfessors] = useState(p);
+  const [professors, setProfessors] = useState([]);
   const [selectedProfessor, setSelectedProfessor] = useState("Select");
   const [selectedCourse, setSelectedCourse] = useState("Select");
-  const [selectedGrade, setSelectedGrade] = useState("Select");
-  const [review, setReview] = useState("");
+  const [selectedGrade, setSelectedGrade] = useState("A+");
 
   const handleSubmit = async () => {
     try {
@@ -48,14 +42,14 @@ const Input = () => {
       }
 
       const data = await res.json();
-      const classId = data.id;
+      const classId = data._id;
 
       const userRes = await fetch(`${BACKEND}/student/fid/${user.uid}`);
       if (!userRes.ok) {
         throw new Error("Failed to fetch user");
       }
       const userData = await userRes.json();
-      const userId = userData.id;
+      const userId = userData._id;
 
       const gradeRes = await fetch(`${BACKEND}/grade`, {
         method: "POST",
@@ -63,10 +57,9 @@ const Input = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          classId,
-          userId,
+          class_id: classId,
+          student_id: userId,
           grade: selectedGrade,
-          review,
         }),
       });
 
@@ -74,7 +67,10 @@ const Input = () => {
         throw new Error("Failed to post grade");
       }
 
-      window.location.reload();
+      const gradeData = await gradeRes.json();
+      console.log("Grade posted:", gradeData);
+
+      // window.location.reload();
     } catch (error) {
       console.error("Error posting grade:", error);
     }
@@ -200,7 +196,7 @@ const Input = () => {
             </div>
 
             {/* Review Box */}
-            <div className="review-box">
+            {/* <div className="review-box">
               <textarea
                 id="user-input"
                 value={review}
@@ -208,7 +204,7 @@ const Input = () => {
                 placeholder="Enter review"
                 rows={5} // Start with multiple rows (adjust as needed)
               />
-            </div>
+            </div> */}
 
             {/* Submit Button */}
             <div className="button-container">
