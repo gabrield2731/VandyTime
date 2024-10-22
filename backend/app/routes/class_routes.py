@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from ..controllers.class_controller import get_class_by_id, create_class, update_class, delete_class, get_all_classes, get_teachers_for_class, get_class_by_teacher_and_name
+from ..controllers.class_controller import get_class_by_id, create_class, update_class, delete_class, get_all_classes, get_teachers_for_class, get_class_by_teacher_and_name, get_all_teachers
 from bson.objectid import ObjectId
 
 class_bp = Blueprint('class_bp', __name__)
@@ -74,3 +74,12 @@ def get_class_by_teacher_and_name_route(class_name, teacher):
         return jsonify(process_data(class_info)), 200
     else:
         return jsonify({"error": "Class not found"}), 404
+    
+@class_bp.route('/allTeachers', methods=['GET'])
+def get_all_professors():
+    """Route to fetch all teachers"""
+    teachers = get_all_teachers()
+    if teachers:
+        return jsonify(teachers), 200
+    else:
+        return jsonify({"error": "No teachers found"}), 404

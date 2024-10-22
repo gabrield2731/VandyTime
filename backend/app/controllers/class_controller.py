@@ -147,3 +147,17 @@ def get_class_by_teacher_and_name(name, teacher):
         return None
     finally:
         client.close()
+
+def get_all_teachers():
+    client = MongoClient(os.getenv("MONGO_URI"))
+    db = client["vandytime_db"]
+    class_collection = db["classes"]
+
+    try:
+        teacher_list = list(class_collection.distinct("teacher"))
+        return teacher_list
+    except Exception as e:
+        print(f"Error getting teachers: {e}")
+        return None
+    finally:
+        client.close()
