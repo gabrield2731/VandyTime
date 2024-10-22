@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import BarChartComponent from "../../components/BarChart";
 import "./styles.css";
+import { useLocation } from "react-router-dom";
 
 const BACKEND = process.env.REACT_APP_API_URL;
 
@@ -34,10 +35,13 @@ const Grades = () => {
   const [selectedInstructor, setSelectedInstructor] =
     useState("Choose a class");
   const [courseInfo, setCourseInfo] = useState(dummyCourseInfo);
-  const [gradeData, setGradeData] = useState([]);
+  const [gradeData, setGradeData] = useState(dummyGradeData);
   const [courses, setCourses] = useState(["Select a class"]);
   const [teachers, setTeachers] = useState(["Select a teacher"]);
   const [average, setAverage] = useState("A+");
+
+  const location = useLocation();
+  const { code, teacher } = location.state || {};
 
   const handleCourseChange = (event) => {
     setSelectedCourse(event.target.value);
@@ -47,18 +51,19 @@ const Grades = () => {
     setSelectedInstructor(event.target.value);
   };
 
-  const handleChooseClass = async () => {
-    // Ensure that a course and instructor are selected
-    if (selectedCourse === "" || selectedInstructor === "Choose a class") {
-      return;
-    }
-
+  const handleGetClasses = async (course, instructor) => {
     try {
       // Fetch class information based on selected course and instructor
+      console.log("in" + course + " " + instructor);
+      console.log(
+        `${BACKEND}/class/${encodeURIComponent(course)}/${encodeURIComponent(
+          instructor
+        )}`
+      );
       const response = await fetch(
-        `${BACKEND}/class/${encodeURIComponent(
-          selectedCourse
-        )}/${encodeURIComponent(selectedInstructor)}`
+        `${BACKEND}/class/${encodeURIComponent(course)}/${encodeURIComponent(
+          instructor
+        )}`
       );
       if (!response.ok) {
         throw new Error("Failed to fetch grades");
@@ -106,10 +111,21 @@ const Grades = () => {
     }
   };
 
+  const handleChooseClass = async () => {
+    // Ensure that a course and instructor are selected
+    if (selectedCourse === "" || selectedInstructor === "Choose a class") {
+      return;
+    }
+    handleGetClasses(selectedCourse, selectedInstructor);
+  };
+
   useEffect(() => {
     // Fetch initial data for courses and set dummy grade data
     const fetchInitialData = async () => {
-      setGradeData(dummyGradeData);
+      if (code && teacher) {
+        console.log(code + " " + teacher);
+        handleGetClasses(code, teacher);
+      }
       try {
         const response = await fetch(`${BACKEND}/class`);
         if (!response.ok) {
@@ -136,7 +152,7 @@ const Grades = () => {
     };
 
     fetchInitialData();
-  }, []);
+  }, [code, teacher]);
 
   useEffect(() => {
     //TODO: Fetch teachers based on selected course
@@ -222,8 +238,6 @@ const Grades = () => {
       return []; // If gradeValue is null, return an empty array (no grades)
     });
 
-    console.log(numericalGrades);
-
     // If there are no valid numerical grades, set average to "N/A"
     if (numericalGrades.length === 0) {
       setAverage("N/A");
@@ -301,9 +315,7 @@ const Grades = () => {
         <div className="course-info">
           <h2>{courseInfo.code}</h2>
           <p>{courseInfo.name}</p>
-          <p>
-            Instructor: {courseInfo.teacher}
-          </p>
+          <p>Instructor: {courseInfo.teacher}</p>
           <p className="description">{courseInfo.description}</p>
           <div>
             <p className="course-average">
