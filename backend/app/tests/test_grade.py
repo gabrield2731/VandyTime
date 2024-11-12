@@ -6,6 +6,7 @@ from app.controllers.class_controller import create_class
 from dotenv import load_dotenv, find_dotenv
 import os
 from pymongo import MongoClient
+from unittest import mock
 
 # Load environment variables for MongoDB connection
 load_dotenv(find_dotenv())
@@ -118,3 +119,67 @@ def test_delete_grade(test_db):
     finally:
         student_collection.delete_one({"_id": ObjectId(student1_id)})
         class_collection.delete_one({"_id": ObjectId(class1_id)})
+
+# Test for exception handling in get_grade_by_id
+@mock.patch("app.controllers.grade_controller.MongoClient")
+def test_get_grade_by_id_exception(MockMongoClient):
+    # Mock the MongoDB client to raise an exception on find_one
+    mock_client = MockMongoClient.return_value
+    mock_db = mock_client["vandytime_db"]
+    mock_db["grades"].find_one.side_effect = Exception("Database error")
+
+    # Call get_grade_by_id and check the result
+    result = get_grade_by_id("someid")
+    assert result is None, "Expected None due to exception in get_grade_by_id"
+
+# Test for exception handling in create_grade
+@mock.patch("app.controllers.grade_controller.MongoClient")
+def test_create_grade_exception(MockMongoClient):
+    # Mock the MongoDB client to raise an exception on insert_one
+    mock_client = MockMongoClient.return_value
+    mock_db = mock_client["vandytime_db"]
+    mock_db["grades"].insert_one.side_effect = Exception("Insert error")
+
+    grade_data = {
+        "student_id": "studentid",
+        "class_id": "classid",
+        "grade": "A"
+    }
+    
+    # Call create_grade and check the result
+    result = create_grade(grade_data)
+    assert result is None, "Expected None due to exception in create_grade"
+
+# Test for exception handling in update_grade
+@mock.patch("app.controllers.grade_controller.MongoClient")
+def test_update_grade_exception(MockMongoClient):
+    # Mock the MongoDB client to raise an exception on update_one
+    mock_client = MockMongoClient.return_value
+    mock_db = mock_client["vandytime_db"]
+    mock_db["grades"].update_one.side_effect = Exception("Update error")
+
+    update_data = {"grade": "B"}
+    
+    # Call update_grade and check the result
+    result = update_grade("someid", update_data)
+    assert result is None, "Expected None due to exception in update_grade"
+
+# Test for exception handling in delete_grade
+@mock.patch("app.controllers.grade_controller.MongoClient")
+@mock.patch("app.controllers.grade_controller.get_grade_by_id")
+def test_delete_grade_exception(mock_get_grade_by_id, MockMongoClient):
+    # Set up get_grade_by_id to return a grade, so delete operations are attempted
+    mock_get_grade_by_id.return_value = {
+        "_id": "someid",
+        "student_id": "studentid",
+        "class_id": "classid"
+    }
+
+    # Mock the MongoDB client to raise an exception on delete_one
+    mock_client = MockMongoClient.return_value
+    mock_db = mock_client["vandytime_db"]
+    mock_db["grades"].delete_one.side_effect = Exception("Delete error")
+
+    # Call delete_grade and check the result
+    result = delete_grade("someid")
+    assert result is None, "Expected None due to exception in delete_grade"
