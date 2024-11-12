@@ -20,11 +20,6 @@ const Home = () => {
             <li>Compare your performance with peers.</li>
           </ul>
         </div>
-
-        {/* Buttons to get started */}
-        <div className="button-section">
-          <a href="/grades" className="get-started-btn">Get Started</a>
-        </div>
       </div>
     </div>
   );
