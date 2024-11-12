@@ -25,7 +25,7 @@ const Navbar = () => {
         <nav className="navbar">
           <div className="navbar-container">
             <div className="navbar-logo">
-              <img src={logo} alt="VandyLogo" className="logo-image" />
+            <a href="/"><img src={logo} alt="VandyLogo" className="logo-image" /></a>
             </div>
 
             <ul className="nav-links">
