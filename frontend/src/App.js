@@ -9,6 +9,7 @@ import Grades from "./pages/Grades";
 import Navbar from "./pages/NavBar";
 import Courses from "./pages/Courses";
 import Input from "./pages/Input";
+import Dashboard from "./pages/Dashboard";
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
           <Route path="/input" element={<Input />} />
           <Route path="/login" element={<SignIn />} />
           <Route path="/signup" element={<SignUp />} />
+          <Route path="/dashboard" element={<Dashboard />} />
         </Routes>
       </Router>
     </AuthProvider>

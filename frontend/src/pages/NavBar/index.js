@@ -41,6 +41,9 @@ const Navbar = () => {
               <li>
                 <a href="/input">Input</a>
               </li>
+              <li>
+                <a href="/dashboard">Dashboard</a>
+              </li>
             </ul>
 
             <div className="nav-login">
