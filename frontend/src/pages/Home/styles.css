@@ -10,7 +10,7 @@ body, html {
 .home {
   max-width: 800px;
   margin: 0 auto;
-  padding: 20px;
+  padding: 1%;
   text-align: center;
 }
 
@@ -19,7 +19,6 @@ body, html {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-bottom: 10px;
 }
 
 .home-title {
