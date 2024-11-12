@@ -2,6 +2,7 @@ import pytest
 from pymongo import MongoClient
 from bson.objectid import ObjectId
 import os
+from unittest import mock
 from app.controllers.class_controller import get_class_by_id, create_class, update_class, delete_class, get_all_classes, get_teachers_for_class, get_class_by_teacher_and_name, get_all_teachers
 
 # Initialize test database connection
@@ -160,3 +161,90 @@ def test_get_all_teachers(test_db):
     finally:
         test_db.delete_one({"_id": class1_id})
         test_db.delete_one({"_id": class2_id})
+
+# Exception tests
+
+# Test for exception in get_class_by_id
+@mock.patch("app.controllers.class_controller.MongoClient")
+def test_get_class_by_id_exception(MockMongoClient):
+    # Simulate an exception in find_one
+    mock_client = MockMongoClient.return_value
+    mock_client["vandytime_db"]["classes"].find_one.side_effect = Exception("Database error")
+
+    result = get_class_by_id("someid")
+    assert result is None, "Expected None due to exception in get_class_by_id"
+
+# Test for exception in create_class
+@mock.patch("app.controllers.class_controller.MongoClient")
+def test_create_class_exception(MockMongoClient):
+    # Simulate an exception in insert_one
+    mock_client = MockMongoClient.return_value
+    mock_client["vandytime_db"]["classes"].insert_one.side_effect = Exception("Insert error")
+
+    class_data = {
+        "name": "Exception Class", 
+        "teacher": "SMITH, J", 
+        "grades": []
+    }
+    result = create_class(class_data)
+    assert result is None, "Expected None due to exception in create_class"
+
+# Test for exception in update_class
+@mock.patch("app.controllers.class_controller.MongoClient")
+def test_update_class_exception(MockMongoClient):
+    # Simulate an exception in update_one
+    mock_client = MockMongoClient.return_value
+    mock_client["vandytime_db"]["classes"].update_one.side_effect = Exception("Update error")
+
+    update_data = {"name": "Updated Name"}
+    result = update_class("someid", update_data)
+    assert result is None, "Expected None due to exception in update_class"
+
+# Test for exception in delete_class
+@mock.patch("app.controllers.class_controller.MongoClient")
+def test_delete_class_exception(MockMongoClient):
+    mock_client = MockMongoClient.return_value
+    mock_client["vandytime_db"]["classes"].delete_one.side_effect = Exception("Delete error")
+
+    result = delete_class("someid")
+    assert "deleted_count" in result, "Expected error key in delete_class result due to exception"
+    assert result["deleted_count"] == 0, "Expected specific error message in delete_class result"
+
+# Test for exception in get_all_classes
+@mock.patch("app.controllers.class_controller.MongoClient")
+def test_get_all_classes_exception(MockMongoClient):
+    # Simulate an exception in find
+    mock_client = MockMongoClient.return_value
+    mock_client["vandytime_db"]["classes"].find.side_effect = Exception("Find error")
+
+    result = get_all_classes()
+    assert result is None, "Expected None due to exception in get_all_classes"
+
+# Test for exception in get_teachers_for_class
+@mock.patch("app.controllers.class_controller.get_all_classes")
+def test_get_teachers_for_class_exception(MockGetAllClasses):
+    # Simulate an exception in get_all_classes
+    MockGetAllClasses.side_effect = Exception("Get all classes error")
+
+    result = get_teachers_for_class("Some Class")
+    assert result is None, "Expected None due to exception in get_teachers_for_class"
+
+# Test for exception in get_class_by_teacher_and_name
+@mock.patch("app.controllers.class_controller.MongoClient")
+def test_get_class_by_teacher_and_name_exception(MockMongoClient):
+    # Simulate an exception in find_one with regex
+    mock_client = MockMongoClient.return_value
+    mock_client["vandytime_db"]["classes"].find_one.side_effect = Exception("Find error with regex")
+
+    result = get_class_by_teacher_and_name("Some Name", "Some Teacher")
+    assert result is None, "Expected None due to exception in get_class_by_teacher_and_name"
+
+# Test for exception in get_all_teachers
+@mock.patch("app.controllers.class_controller.MongoClient")
+def test_get_all_teachers_exception(MockMongoClient):
+    # Simulate an exception in distinct
+    mock_client = MockMongoClient.return_value
+    mock_client["vandytime_db"]["classes"].distinct.side_effect = Exception("Distinct error")
+
+    result = get_all_teachers()
+    assert result is None, "Expected None due to exception in get_all_teachers"

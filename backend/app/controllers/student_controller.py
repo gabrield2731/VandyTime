@@ -5,11 +5,18 @@ import os
 
 load_dotenv(find_dotenv())
 
+def is_valid_objectid(id):
+    return ObjectId.is_valid(id)
+
 # Get a student by ID from the MongoDB collection
 def get_student_by_id(student_id):
     client = MongoClient(os.getenv("MONGO_URI"))
     db = client["vandytime_db"]
     student_collection = db["students"]
+
+    if not is_valid_objectid(student_id):
+        print(f"Error: '{student_id}' is not a valid ObjectId")
+        return None
 
     try:
         student_object = student_collection.find_one({"_id": ObjectId(student_id)})
