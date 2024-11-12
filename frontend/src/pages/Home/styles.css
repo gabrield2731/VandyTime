@@ -1,121 +1,178 @@
-  /* Ensure no scrollbars appear */
-  html, body {
-    height: 100%;
-    font-family: 'Arial', sans-serif; /* Add a nice font */
-    background-color: #f9f9f9; /* Soft background color */
-  }
-  
-  /* General layout and centering */
-  .home {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 88vh; /* Ensure full-screen height */
-    padding: 0 20px; /* Small padding for responsiveness */
-  }
-  
-  /* Home container styles */
-  .home-container {
-    background-color: white;
-    border-radius: 8px;
-    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1); /* Light shadow for depth */
-    padding: 40px;
-    max-width: 600px;
-    width: 100%;
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    justify-content: center; /* Center content vertically inside the container */
-  }
-  
-  /* Title styling */
+/* General layout and styling */
+body, html {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f9f9f9;
+}
+
+/* Home layout */
+.home {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  text-align: center;
+}
+
+/* Header section for title and user greeting */
+.home-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.home-title {
+  font-size: 3rem;
+  font-weight: bold;
+  color: #333;
+}
+
+
+.home-container {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1); /* Light shadow for depth */
+  padding: 20px;
+  width: 100%;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* Center content vertically inside the container */
+}
+
+.user-greeting {
+  font-size: 1.2rem;
+  color: #555;
+  margin-top: 10px;
+}
+
+/* Introduction text and feature list */
+.intro-section {
+  font-size: 1.3rem;
+  line-height: 1.6;
+  color: #444;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.intro-text {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 30px; /* Increased space between intro text and list */
+  text-align: center;
+}
+
+.features-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.features-text {
+  display: flex;
+  flex-direction: column;
+  gap: 15px; /* Slightly larger gap between list items */
+  text-align: left;
+  max-width: 600px;
+}
+
+.features-text li {
+  display: flex;
+  align-items: flex-start;
+  font-size: 1.2rem;
+}
+
+.features-text li::before {
+  content: "✔";
+  color: #c5a15d;
+  margin-right: 10px;
+  font-size: 1.5rem;
+  align-self: flex-start;
+}
+
+/* Button styling */
+.button-section {
+  margin-top: 50px; /* Increased spacing above the button */
+  display: flex;
+  justify-content: center;
+}
+
+.explore-grades-btn {
+  padding: 15px 40px;
+  font-size: 1.3rem;
+  font-weight: bold;
+  background-color: #c4a55e;
+  color: white;
+  text-decoration: none;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.explore-grades-btn:hover {
+  background-color: #b08e52;
+}
+
+/* Media query for responsiveness */
+@media (max-width: 600px) {
   .home-title {
-    font-size: 2.5rem;
-    font-weight: bold;
-    margin-bottom: 20px;
-    color: #333;
+    font-size: 2rem;
   }
-  
-  /* User greeting styling (when user is logged in) */
-  .user-greeting {
+
+  .explore-grades-btn {
+    padding: 12px 30px;
     font-size: 1.1rem;
-    color: #555;
-    margin-bottom: 30px;
   }
-  
-  /* Introductory text and feature list */
-  .intro-section {
-    margin-bottom: 30px;
-  }
-  
-  .intro-text {
-    font-size: 1.2rem;
-    color: #444;
-  }
-  
-  .features-list {
-    list-style: none;
-    padding: 0;
-    text-align: left;
-    margin-top: 15px;
-    
-    /* Center the entire list */
-    display: flex;
-    flex-direction: column;
-    align-items: center; /* Horizontally centers the list */
-  }
-  
-  .features-list li {
-    display: flex;
-    align-items: center; /* Vertically centers the check mark with the text */
-    font-size: 1.1em;
-  }
-  
-  .features-list li::before {
-    content: "✔"; /* Use your check mark here, or keep your existing check mark icon */
-    color: #c5a15d; /* Set the color for the check mark */
-    margin-right: 10px; /* Space between the check mark and the text */
-    font-size: 1.5em; /* Adjust check mark size */
-  }
-  
-  /* Button container */
-  .button-section {
-    margin-bottom: 20px;
-  }
-  
-  /* Styling the "Get Started" button */
-  .get-started-btn {
-    padding: 15px 40px;
-    font-size: 1.1rem;
-    font-weight: bold;
-    background-color: #c4a55e;
-    color: white;
-    text-decoration: none; /* Remove underline */
-    border-radius: 8px;
-    border: none;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Light shadow for button */
-  }
-  
-  .get-started-btn:hover {
-    background-color: #b08e52;
-    box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.15);
-  }
-  
-  /* Media query for smaller screens */
-  @media (max-width: 600px) {
-    .home-container {
-      padding: 20px;
-    }
-  
-    .home-title {
-      font-size: 2rem;
-    }
-  
-    .get-started-btn {
-      padding: 12px 30px;
-      font-size: 1rem;
-    }
-  }
-  
+}
+
+/* Disclaimer footer styling */
+.disclaimer-footer {
+  position: fixed;
+  bottom: 0;
+  left: 0; /* Ensures the disclaimer starts from the left edge */
+  width: 100%; /* Full width across the screen */
+  background-color: #f9f9f9;
+  padding: 15px 20px;
+  text-align: center;
+  border-top: 1px solid #ddd;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px; /* Space between text and button */
+  color: #777;
+  font-size: 0.85rem;
+  box-shadow: 0px -2px 5px rgba(0, 0, 0, 0.1);
+  z-index: 1000; /* Ensures the footer appears above other content */
+}
+
+.disclaimer-text {
+  max-width: 800px;
+  text-align: center;
+  margin: 0 auto; /* Centers text inside the footer */
+  flex: 1; /* Allows text to take up available space */
+}
+
+/* Accept button styling */
+.accept-btn {
+  padding: 8px 16px;
+  font-size: 0.9rem;
+  font-weight: bold;
+  background-color: #c4a55e;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  flex-shrink: 0; /* Keeps button size consistent */
+}
+
+.accept-btn:hover {
+  background-color: #b08e52;
+}
