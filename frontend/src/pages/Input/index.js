@@ -143,74 +143,80 @@ const Input = () => {
     <>
       {user ? (
         user.emailVerified ? (
-          <div className="container">
-            <h1>Input</h1>
-            <h3>Enter Your Class Data Below</h3>
+          <>
+            <div className="container">
+              <h1>Input</h1>
+              <h3>Enter Your Class Data Below</h3>
 
-            {/* Course Selector */}
-            <div className="course-selector">
-              <label htmlFor="course-select">Select Course: </label>
-              <select
-                id="course-select"
-                value={selectedCourse}
-                onChange={(event) => {
-                  setSelectedCourse(event.target.value);
-                  setSelectedProfessor("");
-                }}>
-                {courses.map((course) => (
-                  <option key={course} value={course}>
-                    {course}
-                  </option>
-                ))}
-              </select>
+              {/* Course Selector */}
+              <div className="course-selector">
+                <label htmlFor="course-select">Select Course: </label>
+                <select
+                  id="course-select"
+                  value={selectedCourse}
+                  onChange={(event) => {
+                    setSelectedCourse(event.target.value);
+                    setSelectedProfessor("");
+                  }}
+                >
+                  {courses.map((course) => (
+                    <option key={course} value={course}>
+                      {course}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Professor Selector */}
+              <div className="professor-selector">
+                <label htmlFor="professor-select">Select Professor: </label>
+                <select
+                  id="professor-select"
+                  value={selectedProfessor}
+                  onChange={(event) => setSelectedProfessor(event.target.value)}
+                >
+                  {professors.map((professor) => (
+                    <option key={professor} value={professor}>
+                      {professor}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Grade Selector */}
+              <div className="grade-selector">
+                <label htmlFor="grade-select">Select Grade: </label>
+                <select
+                  id="grade-select"
+                  value={selectedGrade}
+                  onChange={(event) => setSelectedGrade(event.target.value)}
+                >
+                  {grades.map((grade) => (
+                    <option key={grade} value={grade}>
+                      {grade}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Submit Button */}
+              <div className="button-container">
+                <button onClick={handleSubmit}>Submit</button>
+              </div>
+
+              {/* Disclaimer */}
             </div>
-
-            {/* Professor Selector */}
-            <div className="professor-selector">
-              <label htmlFor="professor-select">Select Professor: </label>
-              <select
-                id="professor-select"
-                value={selectedProfessor}
-                onChange={(event) => setSelectedProfessor(event.target.value)}>
-                {professors.map((professor) => (
-                  <option key={professor} value={professor}>
-                    {professor}
-                  </option>
-                ))}
-              </select>
+            <div className="disclaimer">
+              <p>
+                Disclaimer: By entering your grades, you agree to share your
+                data anonymously with the public. No identifying information
+                will be shown. Developers will have access to this information
+                solely for technical support and maintenance purposes, following
+                strict data handling practices. Please only submit data you’re
+                comfortable sharing under these conditions.
+              </p>
             </div>
-
-            {/* Grade Selector */}
-            <div className="grade-selector">
-              <label htmlFor="grade-select">Select Grade: </label>
-              <select
-                id="grade-select"
-                value={selectedGrade}
-                onChange={(event) => setSelectedGrade(event.target.value)}>
-                {grades.map((grade) => (
-                  <option key={grade} value={grade}>
-                    {grade}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            {/* Review Box */}
-            {/* <div className="review-box">
-              <textarea
-                id="user-input"
-                value={review}
-                onChange={(event) => setReview(event.target.value)}
-                placeholder="Enter review"
-                rows={5} // Start with multiple rows (adjust as needed)
-              />
-            </div> */}
-
-            {/* Submit Button */}
-            <div className="button-container">
-              <button onClick={handleSubmit}>Submit</button>
-            </div>
-          </div>
+          </>
         ) : (
           <h1>Please verify your email to access this page</h1>
         )

@@ -28,11 +28,10 @@ const Home = () => {
         <a href="/grades" className="explore-grades-btn">Explore Grades</a>
       </div>
 
-        <div className="disclaimer-footer">
-          <p className="disclaimer-text">
-            Disclaimer: By entering your grades, you agree to share your data anonymously with the public. No identifying information will be shown. Developers will have access to this information solely for technical support and maintenance purposes, following strict data handling practices. Please only submit data you’re comfortable sharing under these conditions.
-          </p>
-        </div>
+      <div className="disclaimer-footer">
+        <p className="disclaimer-text">
+          Disclaimer: By entering your grades, you agree to share your data anonymously with the public. No identifying information will be shown. Developers will have access to this information solely for technical support and maintenance purposes, following strict data handling practices. Please only submit data you’re comfortable sharing under these conditions.
+        </p>
       </div>
     </div>
   );

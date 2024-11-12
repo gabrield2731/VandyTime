@@ -2,7 +2,8 @@ import pytest
 from pymongo import MongoClient
 from bson.objectid import ObjectId
 import os
-from app.controllers.student_controller import get_student_by_id, create_student, update_student, delete_student
+from unittest import mock
+from app.controllers.student_controller import get_student_by_id, create_student, update_student, delete_student, get_student_by_fid
 
 # Load environment variables for MongoDB connection
 from dotenv import load_dotenv, find_dotenv
@@ -102,3 +103,78 @@ def test_delete_student(test_db):
         # Ensure cleanup even if tests fail
         test_db.delete_one({"_id": student1_id})
         test_db.delete_one({"_id": student2_id})
+
+# Test for exception handling in get_student_by_id
+@mock.patch("app.controllers.student_controller.MongoClient")
+def test_get_student_by_id_exception(MockMongoClient):
+    # Mock the MongoDB client to raise an exception on find_one
+    mock_client = MockMongoClient.return_value
+    mock_db = mock_client["vandytime_db"]
+    mock_db["students"].find_one.side_effect = Exception("Database error")
+
+    # Call get_student_by_id and check the result
+    result = get_student_by_id("someid")
+    assert result is None, "Expected None due to exception in get_student_by_id"
+
+# Test for exception handling in get_student_by_fid
+@mock.patch("app.controllers.student_controller.MongoClient")
+def test_get_student_by_fid_exception(MockMongoClient):
+    # Mock the MongoDB client to raise an exception on find_one
+    mock_client = MockMongoClient.return_value
+    mock_db = mock_client["vandytime_db"]
+    mock_db["students"].find_one.side_effect = Exception("Database error")
+
+    # Call get_student_by_fid and check the result
+    result = get_student_by_fid("firebase_id")
+    assert result is None, "Expected None due to exception in get_student_by_fid"
+
+# Test for exception handling in create_student
+@mock.patch("app.controllers.student_controller.MongoClient")
+def test_create_student_exception(MockMongoClient):
+    # Mock the MongoDB client to raise an exception on insert_one
+    mock_client = MockMongoClient.return_value
+    mock_db = mock_client["vandytime_db"]
+    mock_db["students"].insert_one.side_effect = Exception("Insert error")
+
+    student_data = {
+        "name": "Test Student",
+        "grades": []
+    }
+    
+    # Call create_student and check the result
+    result = create_student(student_data)
+    assert result is None, "Expected None due to exception in create_student"
+
+# Test for exception handling in update_student
+@mock.patch("app.controllers.student_controller.MongoClient")
+def test_update_student_exception(MockMongoClient):
+    # Mock the MongoDB client to raise an exception on update_one
+    mock_client = MockMongoClient.return_value
+    mock_db = mock_client["vandytime_db"]
+    mock_db["students"].update_one.side_effect = Exception("Update error")
+
+    update_data = {"name": "Updated Name"}
+    
+    # Call update_student and check the result
+    result = update_student("someid", update_data)
+    assert result is None, "Expected None due to exception in update_student"
+
+# Test for exception handling in delete_student
+@mock.patch("app.controllers.student_controller.MongoClient")
+@mock.patch("app.controllers.student_controller.get_student_by_id")
+@mock.patch("app.controllers.grade_controller.delete_grade", return_value=None)  # Mock delete_grade to do nothing
+def test_delete_student_exception(mock_delete_grade, mock_get_student_by_id, MockMongoClient):
+    # Set up get_student_by_id to return a student with grades so delete operations are attempted
+    mock_get_student_by_id.return_value = {
+        "_id": "someid",
+        "grades": ["grade1", "grade2"]
+    }
+
+    # Mock the MongoDB client to raise an exception on delete_one
+    mock_client = MockMongoClient.return_value
+    mock_db = mock_client["vandytime_db"]
+    mock_db["students"].delete_one.side_effect = Exception("Delete error")
+
+    # Call delete_student and check the result
+    result = delete_student("someid")
+    assert "error" in result, "Expected 'error' key in result due to exception in delete_one"
