@@ -37,8 +37,8 @@ def create_class(class_data):
         if "name" not in class_data:
             return None
         
-        if get_class_by_teacher_and_name(class_data["name"], class_data["teacher"]):
-            return None
+        # if get_class_by_teacher_and_name(class_data["name"], class_data["teacher"]):
+        #     return None
 
         class_object = class_collection.insert_one(class_data)
         return class_object.inserted_id
