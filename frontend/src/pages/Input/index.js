@@ -156,7 +156,8 @@ const Input = () => {
                 onChange={(event) => {
                   setSelectedCourse(event.target.value);
                   setSelectedProfessor("");
-                }}>
+                }}
+              >
                 {courses.map((course) => (
                   <option key={course} value={course}>
                     {course}
@@ -171,7 +172,8 @@ const Input = () => {
               <select
                 id="professor-select"
                 value={selectedProfessor}
-                onChange={(event) => setSelectedProfessor(event.target.value)}>
+                onChange={(event) => setSelectedProfessor(event.target.value)}
+              >
                 {professors.map((professor) => (
                   <option key={professor} value={professor}>
                     {professor}
@@ -186,7 +188,8 @@ const Input = () => {
               <select
                 id="grade-select"
                 value={selectedGrade}
-                onChange={(event) => setSelectedGrade(event.target.value)}>
+                onChange={(event) => setSelectedGrade(event.target.value)}
+              >
                 {grades.map((grade) => (
                   <option key={grade} value={grade}>
                     {grade}
@@ -194,28 +197,35 @@ const Input = () => {
                 ))}
               </select>
             </div>
-
-            {/* Review Box */}
-            {/* <div className="review-box">
-              <textarea
-                id="user-input"
-                value={review}
-                onChange={(event) => setReview(event.target.value)}
-                placeholder="Enter review"
-                rows={5} // Start with multiple rows (adjust as needed)
-              />
-            </div> */}
-
+            
             {/* Submit Button */}
             <div className="button-container">
               <button onClick={handleSubmit}>Submit</button>
             </div>
           </div>
         ) : (
-          <h1>Please verify your email to access this page</h1>
+          <div
+            style={{
+              height: "100vh",
+              display: "flex",
+              "justify-content": "center",
+              padding: "20px",
+            }}
+          >
+            <h1>Please verify your email to access this page</h1>
+          </div>
         )
       ) : (
-        <h1>Please log in to access this page</h1>
+        <div
+          style={{
+            height: "100vh",
+            display: "flex",
+            "justify-content": "center",
+            padding: "20px",
+          }}
+        >
+          <h1>Please log in to access this page</h1>
+        </div>
       )}
     </>
   );

@@ -1,14 +1,14 @@
-import React from 'react';
+import React from "react";
 import { useAuth } from "../../stores/firebase"; // Make sure this path is correct
 import "./styles.css"; // Link to your CSS file for styling
 
 const Dashboard = () => {
-    const user = useAuth();
+  const user = useAuth();
   // Hard-coded sample data
   const courses = [
-    { code: 'CS 4278', professor: 'SINGH, V', grade: 'B' },
-    { code: 'CS 1101', professor: 'BAI, R', grade: 'A' },
-    { code: 'CS 2212', professor: 'HASAN, MD', grade: 'C' }
+    { code: "CS 4278", professor: "SINGH, V", grade: "B" },
+    { code: "CS 1101", professor: "BAI, R", grade: "A" },
+    { code: "CS 2212", professor: "HASAN, MD", grade: "C" },
   ];
 
   return (
@@ -39,10 +39,28 @@ const Dashboard = () => {
             </div>
           </div>
         ) : (
-          <h1>Please verify your email to access this page</h1>
+          <div
+            style={{
+              height: "100vh",
+              display: "flex",
+              "justify-content": "center",
+              padding: "20px",
+            }}
+          >
+            <h1>Please verify your email to access this page</h1>
+          </div>
         )
       ) : (
-        <h1>Please log in to access this page</h1>
+        <div
+          style={{
+            height: "100vh",
+            display: "flex",
+            "justify-content": "center",
+            padding: "20px",
+          }}
+        >
+          <h1>Please log in to access this page</h1>
+        </div>
       )}
     </>
   );

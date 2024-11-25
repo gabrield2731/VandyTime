@@ -1,15 +1,15 @@
 /* General Page Styling */
 body {
   font-family: "Arial", sans-serif;
-  background-color: #ffffff; /* Light background */
+  background-color: #ffffff;
   margin: 0;
   padding: 0;
-  color: #333333; /* Dark text color */
+  color: #333333;
 }
 
 h2,
 h3 {
-  color: #333333; /* Dark text for headers */
+  color: #333333;
   font-weight: bold;
 }
 
@@ -28,84 +28,88 @@ h3 {
   gap: 20px;
   padding: 20px;
   justify-content: center;
-  background-color: #f5f5f5; /* Light gray background */
-  border-bottom: 1px solid #cccccc; /* Light gray border */
+  background-color: #f5f5f5;
+  border-bottom: 1px solid #cccccc;
 }
 
 .input-section label {
   font-weight: bold;
   margin-right: 10px;
-  color: #333333; /* Dark label text */
+  color: #333333;
 }
 
 input,
 select {
   padding: 8px;
-  border: 1px solid #cccccc; /* Light border for input */
+  border: 1px solid #cccccc;
   border-radius: 5px;
-  background-color: #ffffff; /* White background for input */
-  color: #333333; /* Dark text */
+  background-color: #ffffff;
+  color: #333333;
   font-size: 16px;
+  max-width: 250px;
 }
 
 button {
   padding: 10px 20px;
-  background-color: #c4a55e; /* New Gold color for button */
-  color: black; /* White button text */
+  background-color: #c4a55e;
+  color: black;
   border: none;
   border-radius: 5px;
   cursor: pointer;
 }
 
 button:hover {
-  background-color: #b08e52; /* Darker version of the new gold on hover */
+  background-color: #b08e52;
 }
 
-/* Flexbox to align Grade Distribution on the left and Course Info on the right */
+/* Flexbox to Align Grade Distribution and Course Info Side by Side */
 .main-content {
   display: flex;
+  flex-direction: row; /* Align items horizontally by default */
   justify-content: space-between;
+  gap: 20px; /* Space between chart and course info */
   padding: 20px;
   max-width: 1200px;
-  margin: 0 auto;
+  margin: 0 auto; /* Center content on the page */
+  flex-wrap: wrap; /* Allow wrapping on smaller screens */
 }
 
 /* Grade Distribution Bar Chart Styling */
 .grade-distribution {
-  width: 60%;
-  margin-right: 20px;
+  flex: 3; /* Take 3 parts of the available space */
+  min-width: 300px; /* Ensure it doesn't get too narrow */
 }
 
 .chart-container {
   padding: 20px;
-  background-color: #f5f5f5; /* Light gray background for the chart */
+  background-color: #f5f5f5;
   border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Soft shadow */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 /* General Styling for the Course Info Box */
 .course-info {
-  width: 100%;
-  max-width: 500px; /* Keep it narrower for readability */
+  flex: 2; /* Take 2 parts of the available space */
+  min-width: 300px; /* Ensure it doesn't get too narrow */
   padding: 10px;
-  background-color: #f9f9f9; /* Very light background */
-  border-radius: 10px; /* Rounded corners */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
-  margin: 5px auto; /* Center it and add space around */
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin: 5px auto; /* Center it on smaller screens */
   font-family: "Arial", sans-serif;
 }
 
 .course-info h2 {
   font-size: 30px;
   font-weight: 700;
-  color: #c4a55e; /* Gold color */
+  color: #c4a55e;
   margin-bottom: 10px;
 }
 
 .course-info p {
   font-size: 16px;
   line-height: 1.6;
-  color: #333333; /* Dark text for readability */
+  color: #333333;
   margin-bottom: 10px;
 }
 
@@ -118,27 +122,48 @@ button:hover {
 
 .course-info .course-average strong,
 .course-info .section-average strong {
-  color: #c4a55e; /* Gold for emphasis */
+  color: #c4a55e;
 }
 
-/* Add space between the title and course description */
 .course-info .description {
   margin: 20px 0;
   font-size: 15px;
   line-height: 1.5;
-  color: #555555; /* Slightly lighter color for secondary text */
+  color: #555555;
 }
 
-/* Footer Styling */
-footer {
-  background-color: #f5f5f5; /* Light gray footer */
-  padding: 10px 0;
-  text-align: center;
-  color: #c4a55e; /* New gold text */
-  margin-top: 30px;
+/* Responsive Design: Tablet Screens */
+@media (max-width: 768px) {
+  .main-content {
+    flex-direction: column; /* Stack elements vertically */
+    align-items: center;
+  }
+
+  .grade-distribution,
+  .course-info {
+    width: 100%; /* Take full width on smaller screens */
+    margin: 0 0 20px 0; /* Add spacing below each section */
+  }
 }
 
-/* Chart Colors */
-.recharts-bar-rectangle {
-  fill: #c4a55e; /* New gold for bars in the chart */
+@media (max-width: 480px) {
+  .chart-container {
+    padding: 15px;
+  }
+
+  .course-info {
+    padding: 15px;
+  }
+
+  h2 {
+    font-size: 24px;
+  }
+
+  h3 {
+    font-size: 20px;
+  }
+
+  .course-info p {
+    font-size: 14px;
+  }
 }
