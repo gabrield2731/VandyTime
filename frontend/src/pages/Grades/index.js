@@ -292,7 +292,7 @@ const Grades = () => {
           </select>
         </div>
         <div>
-          <button onClick={handleChooseClass}>Check Class</button>
+          <button onClick={handleChooseClass} className="check-button">Check Class</button>
         </div>
       </div>
 
