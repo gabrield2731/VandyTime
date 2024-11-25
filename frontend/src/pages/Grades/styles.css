@@ -20,22 +20,32 @@ h2 {
 h3 {
   font-size: 24px;
   margin-bottom: 15px;
+  text-align: center;
 }
 
 /* Input Section Styling */
 .input-section {
   display: flex;
+  flex-wrap: wrap;
   gap: 20px;
   padding: 20px;
   justify-content: center;
+  align-items: center;
   background-color: #f5f5f5;
   border-bottom: 1px solid #cccccc;
+  box-sizing: border-box;
+}
+
+.input-section > div {
+  flex: 1 1 200px;
+  max-width: 300px;
 }
 
 .input-section label {
   font-weight: bold;
-  margin-right: 10px;
   color: #333333;
+  margin-bottom: 5px;
+  display: block;
 }
 
 input,
@@ -46,38 +56,43 @@ select {
   background-color: #ffffff;
   color: #333333;
   font-size: 16px;
-  max-width: 250px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
-button {
+.check-button {
   padding: 10px 20px;
   background-color: #c4a55e;
   color: black;
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  flex: 1 1 200px;
+  max-width: 300px;
+  text-align: center;
+  margin-top: 20px;
 }
 
-button:hover {
+.check-button:hover {
   background-color: #b08e52;
 }
 
-/* Flexbox to Align Grade Distribution and Course Info Side by Side */
+/* Main Content Layout */
 .main-content {
   display: flex;
   flex-direction: row; /* Align items horizontally by default */
   justify-content: space-between;
-  gap: 20px; /* Space between chart and course info */
+  gap: 20px;
   padding: 20px;
   max-width: 1200px;
-  margin: 0 auto; /* Center content on the page */
-  flex-wrap: wrap; /* Allow wrapping on smaller screens */
+  margin: 0 auto;
+  flex-wrap: wrap; /* Allow wrapping for smaller screens */
 }
 
-/* Grade Distribution Bar Chart Styling */
+/* Grade Distribution Chart Styling */
 .grade-distribution {
-  flex: 3; /* Take 3 parts of the available space */
-  min-width: 300px; /* Ensure it doesn't get too narrow */
+  flex: 3;
+  min-width: 250px;
 }
 
 .chart-container {
@@ -85,22 +100,23 @@ button:hover {
   background-color: #f5f5f5;
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  overflow-x: auto;
 }
 
-/* General Styling for the Course Info Box */
+/* Course Info Styling */
 .course-info {
-  flex: 2; /* Take 2 parts of the available space */
-  min-width: 300px; /* Ensure it doesn't get too narrow */
+  flex: 2;
+  min-width: 250px;
   padding: 10px;
   background-color: #f9f9f9;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  margin: 5px auto; /* Center it on smaller screens */
+  margin: 5px auto;
   font-family: "Arial", sans-serif;
 }
 
 .course-info h2 {
-  font-size: 30px;
+  font-size: 24px;
   font-weight: 700;
   color: #c4a55e;
   margin-bottom: 10px;
@@ -113,18 +129,6 @@ button:hover {
   margin-bottom: 10px;
 }
 
-.course-info .course-average,
-.course-info .section-average {
-  font-size: 18px;
-  font-weight: 600;
-  color: #333333;
-}
-
-.course-info .course-average strong,
-.course-info .section-average strong {
-  color: #c4a55e;
-}
-
 .course-info .description {
   margin: 20px 0;
   font-size: 15px;
@@ -132,38 +136,57 @@ button:hover {
   color: #555555;
 }
 
-/* Responsive Design: Tablet Screens */
+/* Responsive Design for Tablets */
 @media (max-width: 768px) {
   .main-content {
     flex-direction: column; /* Stack elements vertically */
-    align-items: center;
+    align-items: center; /* Center elements horizontally */
+    text-align: center; /* Center the text content */
   }
 
   .grade-distribution,
   .course-info {
-    width: 100%; /* Take full width on smaller screens */
-    margin: 0 0 20px 0; /* Add spacing below each section */
+    width: 80%; /* Make the boxes narrower for better centering */
+    margin: 10px auto; /* Center the boxes vertically */
   }
 }
 
+/* Responsive Design for Mobile Phones */
 @media (max-width: 480px) {
   .chart-container {
-    padding: 15px;
+    padding: 10px;
   }
 
-  .course-info {
-    padding: 15px;
+  .input-section {
+    gap: 10px;
+    padding: 10px;
+  }
+
+  input,
+  select,
+  button {
+    font-size: 14px;
+    padding: 6px 10px;
   }
 
   h2 {
-    font-size: 24px;
+    font-size: 20px;
   }
 
   h3 {
-    font-size: 20px;
+    font-size: 18px;
   }
 
   .course-info p {
     font-size: 14px;
+  }
+
+  .course-info {
+    padding: 10px;
+    width: 90%; /* Adjust width for smaller devices */
+  }
+
+  .grade-distribution {
+    width: 90%; /* Adjust width for smaller devices */
   }
 }
