@@ -4,40 +4,38 @@ body, html {
   padding: 0;
   font-family: Arial, sans-serif;
   background-color: #f9f9f9;
+  overflow-x: hidden; /* Prevent horizontal scrolling */
 }
 
 /* Home layout */
 .home {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 1%;
-  text-align: center;
-}
-
-/* Header section for title and user greeting */
-.home-header {
   display: flex;
-  flex-direction: column;
+  justify-content: center;
   align-items: center;
+  min-height: 86vh; /* Take up full screen height */
+  padding: 20px; /* Padding for spacing */
 }
-
-.home-title {
-  font-size: 3rem;
-  font-weight: bold;
-  color: #333;
-}
-
 
 .home-container {
   background-color: white;
   border-radius: 8px;
-  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1); /* Light shadow for depth */
-  padding: 20px;
-  width: 100%;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1); /* Add light shadow */
+  padding: 30px; /* Increased padding for breathing room */
   text-align: center;
-  display: flex;
-  flex-direction: column;
-  justify-content: center; /* Center content vertically inside the container */
+  width: 100%;
+  max-width: 600px; /* Limit container width */
+}
+
+/* Header section for title and user greeting */
+.home-header {
+  margin-bottom: 50px;
+}
+
+.home-title {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #333;
+  margin: 0;
 }
 
 .user-greeting {
@@ -48,20 +46,13 @@ body, html {
 
 /* Introduction text and feature list */
 .intro-section {
-  font-size: 1.3rem;
-  line-height: 1.6;
-  color: #444;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  margin-bottom: 30px;
 }
 
 .intro-text {
-  font-size: 1.5rem;
+  font-size: 1.3rem;
   font-weight: bold;
-  margin-bottom: 30px; /* Increased space between intro text and list */
-  text-align: center;
+  margin-bottom: 15px;
 }
 
 .features-list {
@@ -70,21 +61,14 @@ body, html {
   margin: 0;
   display: flex;
   flex-direction: column;
-  align-items: center;
-}
-
-.features-text {
-  display: flex;
-  flex-direction: column;
-  gap: 15px; /* Slightly larger gap between list items */
-  text-align: left;
-  max-width: 600px;
+  gap: 15px; /* Add consistent spacing between list items */
 }
 
 .features-text li {
+  font-size: 1rem;
   display: flex;
-  align-items: flex-start;
-  font-size: 1.2rem;
+  align-items: center;
+  text-align: left;
 }
 
 .features-text li::before {
@@ -92,19 +76,17 @@ body, html {
   color: #c5a15d;
   margin-right: 10px;
   font-size: 1.5rem;
-  align-self: flex-start;
 }
 
 /* Button styling */
 .button-section {
-  margin-top: 50px; /* Increased spacing above the button */
-  display: flex;
-  justify-content: center;
+  margin-top: 40px;
+  margin-bottom: 40px;
 }
 
 .explore-grades-btn {
-  padding: 15px 40px;
-  font-size: 1.3rem;
+  padding: 15px 30px;
+  font-size: 1.2rem;
   font-weight: bold;
   background-color: #c4a55e;
   color: white;
@@ -119,59 +101,71 @@ body, html {
   background-color: #b08e52;
 }
 
-/* Media query for responsiveness */
-@media (max-width: 600px) {
+/* Disclaimer footer styling */
+.disclaimer-footer {
+  background-color: #f9f9f9;
+  padding: 10px 15px;
+  text-align: center;
+  color: #777;
+  font-size: 0.85rem;
+  border-top: 1px solid #ddd;
+  position: relative; /* Prevent floating behavior */
+  margin-top: 50px; /* Add spacing above footer */
+}
+
+.disclaimer-text {
+  max-width: 100%;
+  font-size: 0.9rem;
+  margin: 0 auto;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
   .home-title {
     font-size: 2rem;
   }
 
+  .user-greeting {
+    font-size: 1rem;
+  }
+
+  .intro-text {
+    font-size: 1.2rem;
+  }
+
+  .features-text li {
+    font-size: 0.95rem;
+  }
+
   .explore-grades-btn {
-    padding: 12px 30px;
-    font-size: 1.1rem;
+    padding: 12px 25px;
+    font-size: 1rem;
+  }
+
+  .disclaimer-text {
+    font-size: 0.8rem;
   }
 }
 
-/* Disclaimer footer styling */
-.disclaimer-footer {
-  position: fixed;
-  bottom: 0;
-  left: 0; /* Ensures the disclaimer starts from the left edge */
-  width: 100%; /* Full width across the screen */
-  background-color: #f9f9f9;
-  padding: 15px 20px;
-  text-align: center;
-  border-top: 1px solid #ddd;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 15px; /* Space between text and button */
-  color: #777;
-  font-size: 0.85rem;
-  box-shadow: 0px -2px 5px rgba(0, 0, 0, 0.1);
-  z-index: 1000; /* Ensures the footer appears above other content */
-}
+@media (max-width: 480px) {
+  .home-container {
+    padding: 20px;
+  }
 
-.disclaimer-text {
-  max-width: 800px;
-  text-align: center;
-  margin: 0 auto; /* Centers text inside the footer */
-  flex: 1; /* Allows text to take up available space */
-}
+  .home-title {
+    font-size: 1.8rem;
+  }
 
-/* Accept button styling */
-.accept-btn {
-  padding: 8px 16px;
-  font-size: 0.9rem;
-  font-weight: bold;
-  background-color: #c4a55e;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  flex-shrink: 0; /* Keeps button size consistent */
-}
+  .explore-grades-btn {
+    padding: 10px 20px;
+    font-size: 0.9rem;
+  }
 
-.accept-btn:hover {
-  background-color: #b08e52;
+  .intro-text {
+    font-size: 1rem;
+  }
+
+  .features-text li {
+    font-size: 0.9rem;
+  }
 }

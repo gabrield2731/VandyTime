@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useLocation } from "react-router-dom";
 import { useAuth } from "../../stores/firebase";
 import { auth } from "../../firebase/index";
@@ -10,13 +10,19 @@ const Navbar = () => {
   const user = useAuth();
   const location = useLocation();
   const navBarRoutes = ["/login", "/signup"];
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const handleLogout = async () => {
     try {
+      console.log("logging out");
       await signOut(auth);
     } catch (error) {
       console.error("Error signing out:", error);
     }
+  };
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
   };
 
   return (
@@ -25,10 +31,18 @@ const Navbar = () => {
         <nav className="navbar">
           <div className="navbar-container">
             <div className="navbar-logo">
-            <a href="/"><img src={logo} alt="VandyLogo" className="logo-image" /></a>
+              <a href="/">
+                <img src={logo} alt="VandyLogo" className="logo-image" />
+              </a>
             </div>
 
-            <ul className="nav-links">
+            <button className="hamburger-menu" onClick={toggleMenu}>
+              <span></span>
+              <span></span>
+              <span></span>
+            </button>
+
+            <ul className={`nav-links ${isMenuOpen ? "show-menu" : ""}`}>
               <li>
                 <a href="/">Home</a>
               </li>
@@ -44,19 +58,21 @@ const Navbar = () => {
               <li>
                 <a href="/dashboard">Dashboard</a>
               </li>
-            </ul>
-
-            <div className="nav-login">
-              {user ? (
-                <button onClick={handleLogout} className="login-btn">
-                  Log Out
-                </button>
-              ) : (
-                <a href="/login" className="login-btn">
-                  Log In
-                </a>
+              {user && (
+                <li>
+                  <a onClick={handleLogout} className="login-btn">
+                    Log Out
+                  </a>
+                </li>
               )}
-            </div>
+              {!user && (
+                <li>
+                  <a href="/login" className="login-btn">
+                    Log In
+                  </a>
+                </li>
+              )}
+            </ul>
           </div>
         </nav>
       )}
