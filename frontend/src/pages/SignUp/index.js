@@ -22,6 +22,8 @@ const SignUp = () => {
       body: JSON.stringify({
         email: email,
         firebase_id: f_id,
+        grades: [],
+        class_ids: [],
       }),
     });
 
