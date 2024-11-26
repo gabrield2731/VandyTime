@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from ..controllers.grade_controller import get_grade_by_id, create_grade, update_grade, delete_grade
+from ..controllers.grade_controller import get_grade_by_id, create_grade, update_grade, delete_grade, get_grades_by_class
 from bson.objectid import ObjectId
 
 grade_bp = Blueprint('grade_bp', __name__)
@@ -42,8 +42,16 @@ def edit_grade(grade_id):
 def remove_grade(grade_id):
     """Route to delete a grade."""
     result = delete_grade(grade_id)
-    # Broken need to implement in create_class function
     if result and result["deleted_count"] > 0:
         return jsonify({"message": "Grade deleted"}), 200
     else:
         return jsonify({"error": "Grade not found"}), 404
+
+@grade_bp.route('/<class_id>/<year>/<semester>', methods=['GET'])
+def get_grades_by_sem(class_id, year, semester):
+    """Route to fetch all grades for a class in a specific year and semester"""
+    result = get_grades_by_class(class_id, year, semester)
+
+    if result or result == []:
+        return jsonify(result), 200
+    return jsonify({"error": "Grades not found"}), 404

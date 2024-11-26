@@ -32,13 +32,14 @@ const dummyCourseInfo = {
 
 const Grades = () => {
   const [selectedCourse, setSelectedCourse] = useState("");
-  const [selectedInstructor, setSelectedInstructor] =
-    useState("Choose a class");
+  const [selectedInstructor, setSelectedInstructor] = useState("");
   const [courseInfo, setCourseInfo] = useState(dummyCourseInfo);
   const [gradeData, setGradeData] = useState(dummyGradeData);
   const [courses, setCourses] = useState(["Select a class"]);
   const [teachers, setTeachers] = useState(["Select a teacher"]);
   const [average, setAverage] = useState("A+");
+  const [year, setYear] = useState("2024");
+  const [semester, setSemester] = useState("Fall");
 
   const location = useLocation();
   const { code, teacher } = location.state || {};
@@ -54,12 +55,6 @@ const Grades = () => {
   const handleGetClasses = async (course, instructor) => {
     try {
       // Fetch class information based on selected course and instructor
-      console.log("in" + course + " " + instructor);
-      console.log(
-        `${BACKEND}/class/${encodeURIComponent(course)}/${encodeURIComponent(
-          instructor
-        )}`
-      );
       const response = await fetch(
         `${BACKEND}/class/${encodeURIComponent(course)}/${encodeURIComponent(
           instructor
@@ -70,8 +65,6 @@ const Grades = () => {
       }
       const data = await response.json();
       setCourseInfo(data);
-
-      const gradeIds = data.grades;
 
       // Initialize the fixed-length array with all grades set to zero count
       const gradesArray = [
@@ -90,20 +83,22 @@ const Grades = () => {
         { grade: "NP", count: 0 },
       ];
 
-      // Fetch each grade based on the IDs and update the count in the array directly
-      for (let i = 0; i < gradeIds.length; i++) {
-        const response = await fetch(`${BACKEND}/grade/${gradeIds[i]}`);
-        if (!response.ok) {
-          throw new Error("Failed to fetch grade");
-        }
-        const grade = await response.json();
+      const allGrades = await fetch(
+        `${BACKEND}/grade/${data._id}/${year}/${semester}`
+      );
 
-        // Find the grade object in the array and increment its count
+      if (!allGrades.ok) {
+        throw new Error("Failed to fetch grades");
+      }
+
+      const grades = await allGrades.json();
+
+      grades.forEach((grade) => {
         const gradeObj = gradesArray.find((g) => g.grade === grade.grade);
         if (gradeObj) {
           gradeObj.count++;
         }
-      }
+      });
 
       setGradeData(gradesArray);
     } catch (error) {
@@ -155,8 +150,6 @@ const Grades = () => {
   }, [code, teacher]);
 
   useEffect(() => {
-    //TODO: Fetch teachers based on selected course
-    // fix this fetch and make it match the format of the variables
     if (!selectedCourse) return;
 
     const fetchTeachers = async () => {
@@ -266,8 +259,7 @@ const Grades = () => {
           <select
             id="course-select"
             value={selectedCourse}
-            onChange={handleCourseChange}
-          >
+            onChange={handleCourseChange}>
             {courses.map((course) => (
               <option key={course} value={course}>
                 {course}
@@ -282,8 +274,7 @@ const Grades = () => {
           <select
             id="instructor-select"
             value={selectedInstructor}
-            onChange={handleInstructorChange}
-          >
+            onChange={handleInstructorChange}>
             {teachers.map((teacher) => (
               <option key={teacher} value={teacher}>
                 {teacher}
@@ -291,8 +282,44 @@ const Grades = () => {
             ))}
           </select>
         </div>
+
+        {/* Year Selector */}
         <div>
-          <button onClick={handleChooseClass} className="check-button">Check Class</button>
+          <label htmlFor="year-select">Year: </label>
+          <select
+            id="year-select"
+            value={year}
+            onChange={(e) => setYear(e.target.value)}>
+            {Array.from(
+              { length: 10 },
+              (_, i) => new Date().getFullYear() - i
+            ).map((yr) => (
+              <option key={yr} value={yr}>
+                {yr}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Semester Selector */}
+        <div>
+          <label htmlFor="semester-select">Semester: </label>
+          <select
+            id="semester-select"
+            value={semester}
+            onChange={(e) => setSemester(e.target.value)}>
+            {["Fall", "Spring"].map((sem) => (
+              <option key={sem} value={sem}>
+                {sem}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div>
+          <button onClick={handleChooseClass} className="check-button">
+            Check Class
+          </button>
         </div>
       </div>
 

@@ -68,3 +68,18 @@ def test_remove_grade(client):
         assert response.json == {"message": "Grade deleted"}
     elif response.status_code == 404:
         assert response.json == {"error": "Grade not found"}
+
+def test_get_grades_by_sem_random_id(client):
+    random_class_id = ObjectId()
+    year = 2024
+    semester = "fall"
+
+    # Make request to the route
+    response = client.get(f"/grade/{random_class_id}/{year}/{semester}")
+
+    if response.status_code == 200:
+        # Assert that the response is a list
+        assert isinstance(response.json, list), f"Expected list but got {type(response.json)}"
+    elif response.status_code == 404:
+        # Assert the error response
+        assert response.json == {"error": "Grades not found"}

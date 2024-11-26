@@ -1,6 +1,6 @@
 import pytest
 from bson.objectid import ObjectId
-from app.controllers.grade_controller import create_grade, get_grade_by_id, update_grade, delete_grade
+from app.controllers.grade_controller import create_grade, get_grade_by_id, update_grade, delete_grade, process_data, get_grades_by_class
 from app.controllers.student_controller import create_student
 from app.controllers.class_controller import create_class
 from dotenv import load_dotenv, find_dotenv
@@ -18,6 +18,24 @@ db = client["vandytime_db"]
 grade_collection = db["grades"]
 student_collection = db["students"]
 class_collection = db["classes"]
+
+def test_process_data_with_objectid():
+    data = {
+        "id": ObjectId("507f1f77bcf86cd799439011"),
+        "name": "Test Item"
+    }
+    result = process_data(data)
+    assert result["id"] == "507f1f77bcf86cd799439011"
+    assert result["name"] == "Test Item"
+
+def test_process_data_with_nested_objectid_list():
+    data = {
+        "ids": [ObjectId("507f1f77bcf86cd799439011"), ObjectId("507f1f77bcf86cd799439012")],
+        "name": "Test Item"
+    }
+    result = process_data(data)
+    assert result["ids"] == ["507f1f77bcf86cd799439011", "507f1f77bcf86cd799439012"]
+    assert result["name"] == "Test Item"
 
 @pytest.fixture(scope="module")
 def test_db():
@@ -120,6 +138,46 @@ def test_delete_grade(test_db):
         student_collection.delete_one({"_id": ObjectId(student1_id)})
         class_collection.delete_one({"_id": ObjectId(class1_id)})
 
+# Functional test for get_grades_by_class
+def test_get_grades_by_class(test_db):
+    # Create test data
+    class_id = str(ObjectId())
+    year = 2024
+    semester = "fall"
+
+    grade1 = {
+        "class_id": class_id,
+        "student_id": str(ObjectId()),
+        "year": year,
+        "semester": semester,
+        "grade": 85
+    }
+    grade2 = {
+        "class_id": class_id,
+        "student_id": str(ObjectId()),
+        "year": year,
+        "semester": semester,
+        "grade": 90
+    }
+
+    # Insert test data into the database
+    gid1 = create_grade(grade1)
+    gid2 = create_grade(grade2)
+
+    try:
+        # Call the function to test
+        result = get_grades_by_class(str(class_id), year, semester)
+
+        # Verify the results
+        assert len(result) == 2, f"Expected 2 grades but got {len(result)}"
+        assert result[0]["grade"] == 85, f"Expected grade 85 but got {result[0]}"
+        assert result[1]["grade"] == 90, f"Expected grade 90 but got {result[1]}"
+    finally:
+        # Clean up test data
+        test_db.delete_one({"_id": gid2})
+        test_db.delete_one({"_id": gid1})
+
+
 # Test for exception handling in get_grade_by_id
 @mock.patch("app.controllers.grade_controller.MongoClient")
 def test_get_grade_by_id_exception(MockMongoClient):
@@ -183,3 +241,16 @@ def test_delete_grade_exception(mock_get_grade_by_id, MockMongoClient):
     # Call delete_grade and check the result
     result = delete_grade("someid")
     assert result is None, "Expected None due to exception in delete_grade"
+
+@mock.patch("app.controllers.grade_controller.MongoClient")
+def test_get_grades_by_class_exception(MockMongoClient):
+    # Mock the database connection
+    mock_client = MockMongoClient.return_value
+    mock_db = mock_client["vandytime_db"]
+    mock_db["grades"].find_one.side_effect = Exception("Database error")
+
+    # Call the function
+    result = get_grades_by_class("someclassid", 2024, "Fall")
+
+    # Verify the behavior
+    assert result is None, "Expected None due to exception in get_grades_by_class"
