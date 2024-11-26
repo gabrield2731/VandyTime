@@ -20,7 +20,7 @@ def create_app():
         print(f"Failed to connect to MongoDB: {e}")
 
     # Allow CORS for specific origins, including localhost for development
-    CORS(app, resources={r"/*": {"origins": ["https://vandy-time-frontend.vercel.app", "http://localhost:3000"]}})
+    CORS(app, resources={r"/*": {"origins": ["https://vandytime.vercel.app", "http://localhost:3000"]}})
 
     @app.route('/')
     def index():
@@ -46,7 +46,7 @@ def create_app():
     def after_request(response):
         # Allow origin dynamically based on the incoming request's origin
         origin = request.headers.get("Origin")
-        if origin in ["https://vandy-time-frontend.vercel.app", "http://localhost:3000"]:
+        if origin in ["https://vandytime.vercel.app", "http://localhost:3000"]:
             response.headers["Access-Control-Allow-Origin"] = origin
         response.headers["Access-Control-Allow-Headers"] = "Content-Type,Authorization"
         response.headers["Access-Control-Allow-Methods"] = "GET,POST,PUT,DELETE,OPTIONS"
