@@ -101,7 +101,7 @@ def delete_grade(grade_id):
 
         student_collection.update_one(
             {"_id": ObjectId(grade_data['student_id'])},
-            {"$pull": {"grades": ObjectId(grade_id)}}
+            {"$pull": {"grades": ObjectId(grade_id), "class_ids": ObjectId(grade_data['class_id'])}}
         )
 
         class_collection.update_one(
