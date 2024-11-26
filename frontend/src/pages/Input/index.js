@@ -55,7 +55,10 @@ const Input = () => {
       const userData = await userRes.json();
       const userId = userData._id;
 
-      if (userData.class_ids.includes(classId)) {
+      if (
+        userData.class_ids !== undefined &&
+        userData.class_ids.includes(classId)
+      ) {
         window.alert("You have already submitted a grade for this class");
         setLoading(false);
         return;
