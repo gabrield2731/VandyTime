@@ -1,5 +1,6 @@
 /* General layout and styling */
-body, html {
+body,
+html {
   margin: 0;
   padding: 0;
   font-family: Arial, sans-serif;
@@ -62,6 +63,8 @@ body, html {
   display: flex;
   flex-direction: column;
   gap: 15px; /* Add consistent spacing between list items */
+  align-items: center;
+  justify-content: center;
 }
 
 .features-text li {

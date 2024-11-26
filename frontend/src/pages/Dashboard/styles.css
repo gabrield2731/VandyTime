@@ -1,32 +1,45 @@
 .table-container {
-    overflow-x: auto; /* Ensure the table is responsive */
-    margin-top: 20px;
-  }
-  
-  .dashboard-table {
-    width: 100%;
-    border-collapse: collapse; /* Remove spaces between cells */
-    margin: 20px 0;
-    background-color: #ffffff; /* White background */
-    text-align: left; /* Align text to the left */
-  }
-  
-  .dashboard-table th, .dashboard-table td {
-    border: 1px solid #cccccc; /* Light border */
-    padding: 12px; /* Padding for cells */
-    font-size: 16px; /* Font size for better readability */
-  }
-  
-  .dashboard-table th {
-    background-color: #c4a55e; /* Gold color for header */
-    color: #ffffff; /* White text in header */
-  }
-  
-  .dashboard-table tr:nth-child(even) {
-    background-color: #f9f9f9; /* Alternate row color */
-  }
-  
-  .dashboard-table tr:hover {
-    background-color: #f1f1f1; /* Highlight row on hover */
-  }
-  
+  overflow-x: auto; /* Ensure the table is responsive */
+  margin-top: 20px;
+}
+
+.dashboard-table {
+  width: 100%;
+  border-collapse: collapse; /* Remove spaces between cells */
+  margin: 20px 0;
+  background-color: #ffffff; /* White background */
+  text-align: left; /* Align text to the left */
+}
+
+.dashboard-table th,
+.dashboard-table td {
+  border: 1px solid #cccccc; /* Light border */
+  padding: 12px; /* Padding for cells */
+  font-size: 16px; /* Font size for better readability */
+}
+
+.dashboard-table th {
+  background-color: #c4a55e; /* Gold color for header */
+  color: #ffffff; /* White text in header */
+}
+
+.dashboard-table tr:nth-child(even) {
+  background-color: #f9f9f9; /* Alternate row color */
+}
+
+.dashboard-table tr:hover {
+  background-color: #f1f1f1; /* Highlight row on hover */
+}
+
+.dashboard-table button {
+  padding: 5px 10px;
+  margin: 5px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+
+.dashboard-table button:hover {
+  background-color: #0056b3;
+}

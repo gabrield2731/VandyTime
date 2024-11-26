@@ -58,17 +58,22 @@ button:hover {
   background-color: #b08e52; /* Darker version of gold on hover */
 }
 
-.review-box textarea,
-.course-selector select,
-.professor-selector select ,
-.grade-selector select{
-width: 100%; /* Full width for the input elements */
-max-width: 400px; /* Limit max width if needed */
-padding: 10px; /* Add padding for better usability */
-border: 1px solid #cccccc; /* Light border for input */
-border-radius: 5px; /* Rounded corners */
+button:disabled {
+  background-color: #cccccc;
+  color: #666666;
+  cursor: not-allowed;
 }
 
+.review-box textarea,
+.course-selector select,
+.professor-selector select,
+.grade-selector select {
+  width: 100%; /* Full width for the input elements */
+  max-width: 400px; /* Limit max width if needed */
+  padding: 10px; /* Add padding for better usability */
+  border: 1px solid #cccccc; /* Light border for input */
+  border-radius: 5px; /* Rounded corners */
+}
 
 /* Review Box Styling */
 .review-box {
@@ -105,15 +110,15 @@ border-radius: 5px; /* Rounded corners */
   margin-bottom: 20px; /* Space below selectors */
 }
 
-  /* Flexbox to align Course Selector */
-  .grade-selector {
-      display: flex;
-      flex-direction: column; /* Stack selectors vertically */
-      align-items: center;
-      gap: 20px;
-      margin-top: 20px;
-      margin-bottom: 20px; /* Space below selectors */
-      }
+/* Flexbox to align Course Selector */
+.grade-selector {
+  display: flex;
+  flex-direction: column; /* Stack selectors vertically */
+  align-items: center;
+  gap: 20px;
+  margin-top: 20px;
+  margin-bottom: 20px; /* Space below selectors */
+}
 
 /* General Styling for Filters */
 .filters {

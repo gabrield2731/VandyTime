@@ -28,9 +28,13 @@ const Input = () => {
   const [selectedProfessor, setSelectedProfessor] = useState("Select");
   const [selectedCourse, setSelectedCourse] = useState("Select");
   const [selectedGrade, setSelectedGrade] = useState("A+");
+  const [year, setYear] = useState("2024");
+  const [semester, setSemester] = useState("Fall");
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async () => {
     try {
+      setLoading(true);
       const res = await fetch(
         `${BACKEND}/class/${encodeURIComponent(
           selectedCourse
@@ -51,6 +55,12 @@ const Input = () => {
       const userData = await userRes.json();
       const userId = userData._id;
 
+      if (userData.class_ids.includes(classId)) {
+        window.alert("You have already submitted a grade for this class");
+        setLoading(false);
+        return;
+      }
+
       const gradeRes = await fetch(`${BACKEND}/grade`, {
         method: "POST",
         headers: {
@@ -60,6 +70,8 @@ const Input = () => {
           class_id: classId,
           student_id: userId,
           grade: selectedGrade,
+          year: year,
+          semester: semester.toLowerCase(),
         }),
       });
 
@@ -69,6 +81,7 @@ const Input = () => {
 
       const gradeData = await gradeRes.json();
       console.log("Grade posted:", gradeData);
+      setLoading(false);
 
       window.location.reload();
     } catch (error) {
@@ -156,8 +169,7 @@ const Input = () => {
                 onChange={(event) => {
                   setSelectedCourse(event.target.value);
                   setSelectedProfessor("");
-                }}
-              >
+                }}>
                 {courses.map((course) => (
                   <option key={course} value={course}>
                     {course}
@@ -172,8 +184,7 @@ const Input = () => {
               <select
                 id="professor-select"
                 value={selectedProfessor}
-                onChange={(event) => setSelectedProfessor(event.target.value)}
-              >
+                onChange={(event) => setSelectedProfessor(event.target.value)}>
                 {professors.map((professor) => (
                   <option key={professor} value={professor}>
                     {professor}
@@ -188,8 +199,7 @@ const Input = () => {
               <select
                 id="grade-select"
                 value={selectedGrade}
-                onChange={(event) => setSelectedGrade(event.target.value)}
-              >
+                onChange={(event) => setSelectedGrade(event.target.value)}>
                 {grades.map((grade) => (
                   <option key={grade} value={grade}>
                     {grade}
@@ -197,10 +207,45 @@ const Input = () => {
                 ))}
               </select>
             </div>
-            
+
+            {/* Year Selector */}
+            <div className="grade-selector">
+              <label htmlFor="year-select">Year: </label>
+              <select
+                id="year-select"
+                value={year}
+                onChange={(e) => setYear(e.target.value)}>
+                {Array.from(
+                  { length: 10 },
+                  (_, i) => new Date().getFullYear() - i
+                ).map((yr) => (
+                  <option key={yr} value={yr}>
+                    {yr}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Semester Selector */}
+            <div className="grade-selector">
+              <label htmlFor="semester-select">Semester: </label>
+              <select
+                id="semester-select"
+                value={semester}
+                onChange={(e) => setSemester(e.target.value)}>
+                {["Fall", "Spring"].map((sem) => (
+                  <option key={sem} value={sem}>
+                    {sem}
+                  </option>
+                ))}
+              </select>
+            </div>
+
             {/* Submit Button */}
             <div className="button-container">
-              <button onClick={handleSubmit}>Submit</button>
+              <button onClick={handleSubmit} disabled={loading}>
+                {loading ? "Loading..." : "Submit"}
+              </button>
             </div>
           </div>
         ) : (
@@ -210,8 +255,7 @@ const Input = () => {
               display: "flex",
               "justify-content": "center",
               padding: "20px",
-            }}
-          >
+            }}>
             <h1>Please verify your email to access this page</h1>
           </div>
         )
@@ -222,8 +266,7 @@ const Input = () => {
             display: "flex",
             "justify-content": "center",
             padding: "20px",
-          }}
-        >
+          }}>
           <h1>Please log in to access this page</h1>
         </div>
       )}
