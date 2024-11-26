@@ -59,6 +59,8 @@ def test_add_student(client):
     elif response.status_code == 400:
         assert response.json == {"error": "Error creating student"}
 
+    client.delete(f"/student/{response.json['id']}")
+
 # Test for PUT /<student_id> (update a student)
 def test_edit_student(client):
     response = client.put(f"/student/{ObjectId()}", json={
