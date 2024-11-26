@@ -56,7 +56,7 @@ def create_grade(grade_data):
 
         student_collection.update_one(
             {"_id": ObjectId(grade_data['student_id'])},
-            {"$push": {"grades": grade_id}}
+            {"$push": {"grades": grade_id, "class_ids": grade_data['class_id']}}
         )
 
         class_collection.update_one(

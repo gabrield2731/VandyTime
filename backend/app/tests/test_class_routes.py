@@ -50,6 +50,8 @@ def test_add_class(client):
         assert response.json["message"] == "Class created"
     elif response.status_code == 400:
         assert response.json == {"error": "Error creating class"}
+    
+    response = client.delete(f"/class/{response.json['id']}")
 
 # Test for PUT /<class_id> (update a class)
 def test_edit_class(client):
